@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Montserrat:wght@700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Logo Colors */
+  --color-brand-cyan: #43afef;
+  --color-brand-cyan-light: #7decf1;
+  --color-brand-navy: #041f41;
+  --color-brand-navy-dark: #020b16; /* Deepest background */
+  --color-brand-navy-light: #0a2a5c; /* Card surface */
+  
+  /* Mapped Semantic Colors */
+  --color-accent: var(--color-brand-cyan);
+  --color-accent-hover: #2b95d6;
+  --color-accent-light: rgba(67, 175, 239, 0.1);
+  --color-accent-glow: rgba(67, 175, 239, 0.5);
+  
+  --color-bg-main: var(--color-brand-navy-dark);
+  --color-bg-card: var(--color-brand-navy);
+  --color-bg-card-hover: var(--color-brand-navy-light);
+
+  --animate-pulse-slow: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Montserrat', sans-serif;
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: .8;
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+}
+
+/* Global Styles */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #080808;
+  color: #e0e0e0;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+/* Utility Class for Gradient Text */
+.texto-gradiente {
+  background: linear-gradient(to right, var(--color-brand-cyan), var(--color-brand-cyan-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: inline-block; /* Often helps with gradient text rendering */
+}
+
+/* Mobile Zoom Adjustment */
+@media (max-width: 640px) {
+  html {
+    font-size: 13px; /* Scales down UI to ~80% of original size on mobile */
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
