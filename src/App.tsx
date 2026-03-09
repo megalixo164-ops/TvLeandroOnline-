@@ -650,12 +650,12 @@ function App() {
         </motion.div>
       </div>
 
-      {/* How it works */}
+      {/* How it works & Channels Section */}
       <section className="py-16 border-y border-white/5 bg-[#030f1c] relative z-20 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://i.imgur.com/gXICK3l.png" 
+            src="https://i.imgur.com/Ja1oHN4.png" 
             alt="Background" 
             className="w-full h-full object-cover blur-[4px] opacity-30"
             referrerPolicy="no-referrer"
@@ -664,6 +664,7 @@ function App() {
         </div>
 
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* How it works content */}
           <div className="text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white uppercase tracking-wide">COMO FUNCIONA O <span className="texto-gradiente">IPTV?</span></h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
@@ -671,7 +672,7 @@ function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
             {/* Step 1 */}
             <div className="bg-[var(--color-brand-navy)] p-8 rounded-xl border border-white/5 text-center relative group hover:border-[var(--color-brand-cyan)]/50 transition-all duration-300 hover:-translate-y-2">
               <div className="w-14 h-14 bg-gradient-to-br from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] rounded-full flex items-center justify-center text-[#020b16] font-bold text-2xl mx-auto mb-6 shadow-[0_0_15px_rgba(67,175,239,0.5)]">1</div>
@@ -700,51 +701,123 @@ function App() {
               <p className="text-gray-400 text-sm leading-relaxed">Comece a assistir seus conteúdos favoritos na hora em qualquer dispositivo.</p>
             </div>
           </div>
+
+          {/* Channels Section Content */}
+          <div className="text-center mb-12">
+             <h2 className="text-xl md:text-2xl font-bold text-white uppercase tracking-wide">
+               Tenha acesso a todos os <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Canais e plataformas streaming</span> do Brasil
+             </h2>
+          </div>
+        </div>
+
+        {/* Carousel */}
+        <div className="relative w-full overflow-hidden">
+          <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#030f1c] via-transparent to-[#030f1c]"></div>
+          <motion.div 
+            className="flex gap-8 w-max px-4"
+            animate={{ x: "-50%" }}
+            transition={{ 
+              duration: 40, 
+              ease: "linear", 
+              repeat: Infinity 
+            }}
+          >
+            {[...Array(2)].map((_, groupIndex) => (
+              <div key={groupIndex} className="flex gap-8">
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#0b1623] border-2 border-white/10 flex items-center justify-center relative overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] group hover:border-[var(--color-brand-cyan)] transition-all duration-300 hover:scale-110 cursor-pointer"
+                  >
+                    {i === 0 ? (
+                      <img 
+                        src="https://i.imgur.com/pvKExUA.png" 
+                        alt="Logo 1" 
+                        className="absolute inset-0 w-full h-full object-cover scale-125" 
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : i === 1 ? (
+                      <img 
+                        src="https://i.imgur.com/EuuOVnC.jpeg" 
+                        alt="Logo 2" 
+                        className="absolute inset-0 w-full h-full object-cover scale-125" 
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50"></div>
+                        
+                        {/* Placeholder Number */}
+                        <span className="text-4xl md:text-5xl font-black text-white/20 group-hover:text-white/40 transition-colors duration-300 z-10">
+                          {i + 1}
+                        </span>
+                      </>
+                    )}
+                    
+                    {/* Image Placeholder Overlay (User will replace background) */}
+                    <div className={`absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors ${(i === 0 || i === 1) ? 'hidden' : ''}`}></div>
+
+                    {/* Glow Effect */}
+                    <div className="absolute inset-0 rounded-full shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] group-hover:shadow-[inset_0_0_20px_rgba(67,175,239,0.3)] transition-all duration-300"></div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
-      {/* Infinite Channels/Stories Carousel */}
-      <div className="relative z-30 w-full overflow-hidden py-8 bg-[#030f1c] border-b border-white/5">
-        <div className="relative z-20 text-center mb-8 px-4">
-           <h2 className="text-xl md:text-2xl font-bold text-white uppercase tracking-wide">
-             Tenha acesso a todos os <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Canais e plataformas streaming</span> do Brasil
-           </h2>
+      {/* Games Access Section */}
+      <section className="relative py-24 md:py-32 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://i.imgur.com/4VVJdN0.jpeg" 
+            alt="Esportes e Jogos" 
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+          {/* Gradient Overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#020b16] via-[#020b16]/80 to-transparent"></div>
         </div>
-        <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#030f1c] via-transparent to-[#030f1c]"></div>
-        <motion.div 
-          className="flex gap-8 w-max px-4"
-          animate={{ x: "-50%" }}
-          transition={{ 
-            duration: 40, 
-            ease: "linear", 
-            repeat: Infinity 
-          }}
-        >
-          {[...Array(2)].map((_, groupIndex) => (
-            <div key={groupIndex} className="flex gap-8">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div 
-                  key={i} 
-                  className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#0b1623] border-2 border-white/10 flex items-center justify-center relative overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] group hover:border-[var(--color-brand-cyan)] transition-all duration-300 hover:scale-110 cursor-pointer"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50"></div>
-                  
-                  {/* Placeholder Number */}
-                  <span className="text-4xl md:text-5xl font-black text-white/20 group-hover:text-white/40 transition-colors duration-300 z-10">
-                    {i + 1}
-                  </span>
-                  
-                  {/* Image Placeholder Overlay (User will replace background) */}
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
 
-                  {/* Glow Effect */}
-                  <div className="absolute inset-0 rounded-full shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] group-hover:shadow-[inset_0_0_20px_rgba(67,175,239,0.3)] transition-all duration-300"></div>
-                </div>
-              ))}
-            </div>
-          ))}
-        </motion.div>
-      </div>
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-2xl">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-3xl md:text-5xl font-black text-white mb-6 uppercase leading-tight"
+            >
+              Com a <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Leandro TV+</span> você tem acesso a todos os seus <span className="text-[var(--color-brand-cyan)]">jogos</span>
+            </motion.h2>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-gray-300 text-lg md:text-xl mb-8 font-medium"
+            >
+              Não perca nenhum lance do seu time do coração. Acompanhe campeonatos nacionais e internacionais com a melhor qualidade de imagem.
+            </motion.p>
+
+            <motion.a
+              href={WHATSAPP_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="inline-flex items-center gap-2 bg-[var(--color-brand-cyan)] text-[#020b16] px-8 py-4 rounded-full font-bold text-lg hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(67,175,239,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)] hover:scale-105"
+            >
+              Quero assistir agora
+            </motion.a>
+          </div>
+        </div>
+      </section>
 
       {/* Pricing Carousel */}
       <section id="planos" className="py-12 bg-[#020b16]">
