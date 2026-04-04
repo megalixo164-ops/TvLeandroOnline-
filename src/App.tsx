@@ -25,7 +25,10 @@ import {
   ArrowLeft,
   Video,
   Phone,
-  MoreVertical
+  MoreVertical,
+  ShoppingCart,
+  Key,
+  PlayCircle
 } from 'lucide-react';
 
 const WHATSAPP_NUMBER = "5547992733349";
@@ -70,6 +73,160 @@ const feedbacks = [
     supportTime: "19:12"
   }
 ];
+
+const HowItWorksSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pathDesktopRef = useRef<SVGPathElement>(null);
+  const pathMobileRef = useRef<SVGPathElement>(null);
+  const stepsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const pathDesktop = pathDesktopRef.current;
+    const pathMobile = pathMobileRef.current;
+    if (!container) return;
+
+    const initPath = (path: SVGPathElement | null) => {
+      if (!path) return 0;
+      const length = path.getTotalLength();
+      path.style.strokeDasharray = `${length}`;
+      path.style.strokeDashoffset = `${length}`;
+      return length;
+    };
+
+    let lengthDesktop = initPath(pathDesktop);
+    let lengthMobile = initPath(pathMobile);
+
+    const handleScroll = () => {
+      const rect = container.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Cálculo de progresso mais preciso baseado na viewport
+      const startTrigger = windowHeight * 0.8;
+      const endTrigger = windowHeight * 0.4;
+      const progressRange = rect.height + (startTrigger - endTrigger);
+      const currentPos = startTrigger - rect.top;
+      
+      let drawPercent = currentPos / progressRange;
+      drawPercent = Math.max(0, Math.min(1, drawPercent));
+
+      if (pathDesktop) {
+        pathDesktop.style.strokeDashoffset = `${lengthDesktop - (lengthDesktop * drawPercent)}`;
+      }
+      if (pathMobile) {
+        pathMobile.style.strokeDashoffset = `${lengthMobile - (lengthMobile * drawPercent)}`;
+      }
+
+      stepsRef.current.forEach((step, index) => {
+        if (!step) return;
+        // Thresholds recalibrados para os 4 passos
+        const threshold = index / (steps.length - 1);
+        if (drawPercent >= threshold * 0.85) { // Ativação levemente antecipada para fluidez
+          step.classList.add('opacity-100', 'scale-100', 'translate-y-0');
+          step.classList.remove('opacity-0', 'scale-75', 'translate-y-8');
+          const icon = step.querySelector('.step-icon');
+          if (icon) {
+            icon.classList.add('animate-pulse-glow');
+            icon.classList.replace('border-transparent', 'border-[#00CFFF]');
+          }
+        } else {
+          step.classList.remove('opacity-100', 'scale-100', 'translate-y-0');
+          step.classList.add('opacity-0', 'scale-75', 'translate-y-8');
+          const icon = step.querySelector('.step-icon');
+          if (icon) {
+            icon.classList.remove('animate-pulse-glow');
+            icon.classList.replace('border-[#00CFFF]', 'border-transparent');
+          }
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    
+    const handleResize = () => {
+      lengthDesktop = initPath(pathDesktop);
+      lengthMobile = initPath(pathMobile);
+      handleScroll();
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const steps = [
+    { id: 1, title: "ESCOLHA O PLANO", desc: "Selecione o plano de IPTV que melhor atende sua necessidade.", icon: ShoppingCart },
+    { id: 2, title: "FALE CONOSCO", desc: "Clique no botão e fale direto com um suporte IPTV via WhatsApp.", icon: MessageCircle },
+    { id: 3, title: "RECEBA O ACESSO", desc: "Liberação imediata! Basta configurar sua lista IPTV atualizada.", icon: Key },
+    { id: 4, title: "APERTE O PLAY", desc: "Comece a assistir seus conteúdos favoritos na hora em qualquer dispositivo.", icon: PlayCircle }
+  ];
+
+  return (
+    <section className="relative w-full bg-[#020b16] py-12 overflow-hidden">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-16 md:mb-24">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+            COMO FUNCIONA O <span className="text-[#00CFFF] drop-shadow-[0_0_15px_rgba(0,207,255,0.5)]">IPTV?</span>
+          </h2>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">Siga nossa jornada simples e rápida para ter acesso ao melhor entretenimento.</p>
+        </div>
+
+        <div className="relative w-full max-w-5xl mx-auto" ref={containerRef}>
+          {/* Desktop SVG Path */}
+          <div className="hidden md:block absolute top-1/2 left-0 w-full h-48 -translate-y-1/2 pointer-events-none z-0">
+            <svg viewBox="0 0 1000 200" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+              <path d="M 140 100 C 260 0, 260 200, 380 100 C 500 0, 500 200, 620 100 C 740 0, 740 200, 860 100" 
+                    fill="none" stroke="transparent" strokeWidth="4" strokeLinecap="round" />
+              <path ref={pathDesktopRef} d="M 140 100 C 260 0, 260 200, 380 100 C 500 0, 500 200, 620 100 C 740 0, 740 200, 860 100" 
+                    fill="none" stroke="#00CFFF" strokeWidth="6" strokeLinecap="round" 
+                    style={{ filter: 'drop-shadow(0 0 8px rgba(0,207,255,0.8))', transition: 'stroke-dashoffset 0.1s ease-out' }} />
+            </svg>
+          </div>
+
+          {/* Mobile SVG Path */}
+          <div className="block md:hidden absolute top-0 left-8 w-8 h-full pointer-events-none z-0">
+            <svg viewBox="0 0 20 800" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+              <path d="M 10 100 L 10 700" fill="none" stroke="transparent" strokeWidth="4" strokeLinecap="round" />
+              <path ref={pathMobileRef} d="M 10 100 L 10 700" fill="none" stroke="#00CFFF" strokeWidth="6" strokeLinecap="round" 
+                    style={{ filter: 'drop-shadow(0 0 8px rgba(0,207,255,0.8))', transition: 'stroke-dashoffset 0.1s ease-out' }} />
+            </svg>
+          </div>
+
+          {/* Steps Container */}
+          <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-12 md:gap-4">
+            {steps.map((step, index) => (
+              <div 
+                key={step.id} 
+                ref={el => stepsRef.current[index] = el}
+                className="flex flex-row md:flex-col items-center md:items-center gap-6 md:gap-6 w-full md:w-1/4 opacity-0 scale-75 translate-y-8 transition-all duration-700 ease-out"
+              >
+                {/* Node / Icon */}
+                <div className="relative flex-shrink-0">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#020b16] border-4 border-transparent flex items-center justify-center relative z-10 step-icon transition-colors duration-500">
+                    <step.icon className="w-8 h-8 md:w-10 md:h-10 text-[#00CFFF]" />
+                  </div>
+                  {/* Number Badge */}
+                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-[#00CFFF] text-[#0a0a1a] font-bold flex items-center justify-center text-sm z-20 shadow-[0_0_10px_rgba(0,207,255,0.8)]">
+                    {step.id}
+                  </div>
+                </div>
+
+                {/* Content Card */}
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 md:p-6 text-left md:text-center w-full shadow-xl hover:bg-white/10 transition-colors">
+                  <h3 className="text-lg md:text-xl font-bold text-white mb-2">{step.title}</h3>
+                  <p className="text-sm md:text-base text-gray-400 leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -263,7 +420,7 @@ function App() {
       </header>
 
       {/* Hero Section (Netflix Style) */}
-      <section id="inicio" className="relative h-[90vh] min-h-[450px] md:min-h-[600px] w-full flex items-center">
+      <section id="inicio" className="relative min-h-fit md:h-[90vh] md:min-h-[600px] w-full flex items-center pt-24 pb-8 md:py-0">
         {/* Background Image with Cinematic Overlay */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <img 
@@ -278,13 +435,13 @@ function App() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--color-brand-navy-dark)]"></div>
         </div>
 
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 w-full pt-20">
+        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 w-full pt-0 md:pt-20">
           <div className="max-w-2xl">
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 leading-tight drop-shadow-2xl">
+            <h1 className="text-3xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-2 md:mb-4 leading-tight drop-shadow-2xl">
               A Melhor Experiência de <br />
               <span className="texto-gradiente">TV Online</span>
             </h1>
-            <p className="text-lg sm:text-2xl text-white font-medium mb-8 drop-shadow-lg max-w-xl">
+            <p className="text-base sm:text-2xl text-white font-medium mb-6 md:mb-8 drop-shadow-lg max-w-xl">
               Acesse a melhor TV Online com canais ao vivo, filmes online e séries completas em TV ao vivo HD e 4K. Experiência de cinema com o Melhor IPTV do mercado.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -310,30 +467,30 @@ function App() {
       </section>
 
       {/* Infinite Series Carousel */}
-      <div className="relative z-30 w-full overflow-hidden mt-8 md:-mt-24 mb-12">
+      <div className="relative z-30 w-full overflow-hidden mt-0 md:-mt-24 mb-8 md:mb-12">
         <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[var(--color-brand-navy-dark)] via-transparent to-[var(--color-brand-navy-dark)]"></div>
         <motion.div 
           className="flex gap-6 w-max px-4"
           animate={{ x: "-50%" }}
           transition={{ 
-            duration: 35, 
+            duration: 45, 
             ease: "linear", 
             repeat: Infinity 
           }}
         >
           {[...Array(2)].map((_, groupIndex) => (
-            <div key={groupIndex} className="flex gap-6">
+            <div key={`series-group-${groupIndex}`} className="flex gap-6">
               {Array.from({ length: 10 }).map((_, i) => (
                 <div 
-                  key={i} 
-                  className="w-40 h-60 md:w-52 md:h-80 bg-[#0b1623] rounded-xl border border-white/10 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl group"
+                  key={`series-card-${groupIndex}-${i}`} 
+                  className="w-48 h-72 md:w-64 md:h-96 bg-[#0b1623] rounded-xl border border-white/10 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl group"
                 >
                   {/* Background Image for F1 */}
                   {i === 0 && (
                     <img 
                       src="https://i.imgur.com/7JZNh7G.png" 
                       alt="Destaque F1" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -343,7 +500,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/VH7Qpl9.png" 
                       alt="Destaque F2" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -353,7 +510,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/0KpC37M.png" 
                       alt="Destaque F3" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -363,7 +520,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/dEUiYbZ.png" 
                       alt="Destaque F4" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -373,7 +530,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/NSetzHI.png" 
                       alt="Destaque F5" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -383,7 +540,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/oyTs1Hp.png" 
                       alt="Destaque F6" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -393,7 +550,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/gTwbLGn.png" 
                       alt="Destaque F7" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -403,7 +560,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/nWPbzK1.png" 
                       alt="Destaque F8" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -413,7 +570,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/xU5wDHG.jpeg" 
                       alt="Destaque F9" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -423,7 +580,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/0WIYgQ1.png" 
                       alt="Destaque F10" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -432,15 +589,12 @@ function App() {
 
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50 z-10"></div>
                   
-                  {/* Placeholder Number */}
-                  <span className="text-6xl font-black text-white/5 group-hover:text-white/10 transition-colors duration-300 z-20 relative">
-                    F{i + 1}
-                  </span>
+                  {/* Placeholder Number Removed */}
                   
                   {/* Label Removed */}
 
                   {/* Hover Effect Overlay */}
-                  <div className="absolute inset-0 bg-[var(--color-brand-cyan)]/0 group-hover:bg-[var(--color-brand-cyan)]/5 transition-colors duration-300 z-30"></div>
+                  <div className="absolute inset-0 bg-[var(--color-brand-cyan)]/0 group-hover:bg-[var(--color-brand-cyan)]/10 transition-colors duration-300 z-30"></div>
                 </div>
               ))}
             </div>
@@ -449,7 +603,7 @@ function App() {
       </div>
 
       {/* Features Carousel */}
-      <section id="recursos" className="pt-12 pb-32 relative z-20 -mt-20">
+      <section id="recursos" className="pt-12 pb-10 relative z-20 mt-0 md:-mt-20">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <img 
@@ -471,29 +625,30 @@ function App() {
             A Leandro TV+ é referência em Streaming de alta performance. Oferecemos o melhor IPTV do Brasil para quem busca qualidade, estabilidade e zero travamentos. Esqueça as antenas, fiações e instalações complicadas: com nossa lista IPTV atualizada, você tem o mundo do entretenimento na palma da sua mão.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8 pt-4 px-2 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8 pb-8 pt-4 px-2 max-w-5xl mx-auto">
             {features.slice(0, 4).map((feature, index) => (
               <div 
                 key={`${feature.id}-${index}`}
                 onClick={feature.action}
-                className="w-full aspect-video bg-[var(--color-brand-navy)] rounded-md border border-white/5 relative group cursor-pointer transition-all duration-300 hover:scale-105 hover:z-30 hover:shadow-[0_10px_40px_-10px_rgba(67,175,239,0.3)] overflow-hidden"
+                className="w-full aspect-[4/5] md:aspect-square bg-[#0a1623] rounded-2xl border border-white/10 relative group cursor-pointer transition-all duration-500 hover:scale-[1.02] md:hover:scale-105 hover:z-30 hover:shadow-[0_20px_50px_-10px_rgba(67,175,239,0.2)] overflow-hidden flex flex-col items-center justify-center p-4 md:p-8"
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-brand-navy-dark)] via-transparent to-transparent z-10 rounded-md"></div>
-                <img src={feature.image} alt={feature.title} className="absolute inset-0 w-full h-full object-cover rounded-md opacity-60 group-hover:opacity-70 transition-opacity" />
+                {/* Animated Background Glow */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-brand-cyan)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
-                {/* Glassmorphism Icon Container */}
-                <div className="absolute top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-lg z-20 transform group-hover:scale-110 transition-transform duration-300">
-                  <feature.icon className="w-6 h-6 text-[var(--color-brand-cyan)] drop-shadow-[0_0_8px_rgba(67,175,239,0.8)]" />
+                {/* Central Destaque Icon */}
+                <div className="mb-4 md:mb-8 p-4 md:p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 z-20 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-2xl">
+                  <feature.icon className="w-8 h-8 md:w-16 md:h-16 text-[var(--color-brand-cyan)] drop-shadow-[0_0_15px_rgba(67,175,239,0.8)]" />
                 </div>
 
-                <div className="absolute bottom-0 left-0 p-6 z-20 w-full transform translate-y-0 transition-transform">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-bold text-white drop-shadow-md">{feature.title}</h3>
-                  </div>
-                  <p className="text-sm text-gray-200 opacity-100 transition-opacity duration-300">
+                <div className="text-center z-20">
+                  <h3 className="text-sm md:text-xl font-black text-white mb-1 md:mb-2 uppercase tracking-tight group-hover:text-[var(--color-brand-cyan)] transition-colors duration-300 leading-tight">{feature.title}</h3>
+                  <p className="text-[10px] md:text-sm text-gray-400 font-medium opacity-80 group-hover:opacity-100 transition-opacity line-clamp-2 md:line-clamp-none">
                     {feature.desc}
                   </p>
                 </div>
+                
+                {/* Border Glow Effect */}
+                <div className="absolute inset-0 border-2 border-[var(--color-brand-cyan)]/0 group-hover:border-[var(--color-brand-cyan)]/40 rounded-2xl transition-all duration-500 z-30 pointer-events-none"></div>
               </div>
             ))}
           </div>
@@ -514,30 +669,30 @@ function App() {
       </section>
 
       {/* Infinite Movie Carousel */}
-      <div className="relative z-30 w-full overflow-hidden -mt-24 mb-12">
+      <div className="relative z-30 w-full overflow-hidden my-4">
         <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[var(--color-brand-navy-dark)] via-transparent to-[var(--color-brand-navy-dark)]"></div>
         <motion.div 
           className="flex gap-6 w-max px-4"
           animate={{ x: "-50%" }}
           transition={{ 
-            duration: 30, 
+            duration: 40, 
             ease: "linear", 
             repeat: Infinity 
           }}
         >
           {[...Array(2)].map((_, groupIndex) => (
-            <div key={groupIndex} className="flex gap-6">
+            <div key={`movie-group-${groupIndex}`} className="flex gap-6">
               {Array.from({ length: 10 }).map((_, i) => (
                 <div 
-                  key={i} 
-                  className="w-40 h-60 md:w-52 md:h-80 bg-[#0b1623] rounded-xl border border-white/10 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl group"
+                  key={`movie-card-${groupIndex}-${i}`} 
+                  className="w-56 h-80 md:w-80 md:h-[480px] bg-[#0b1623] rounded-xl border border-white/10 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl group"
                 >
                   {/* Background Image for S1 */}
                   {i === 0 && (
                     <img 
                       src="https://i.imgur.com/7MmpsfG.png" 
                       alt="Destaque S1" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -547,7 +702,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/oerxMu6.jpeg" 
                       alt="Destaque S2" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -557,7 +712,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/IJ2pkLV.jpeg" 
                       alt="Destaque S3" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -567,7 +722,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/XuXjqYE.png" 
                       alt="Destaque S4" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -577,7 +732,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/T9E0DzN.png" 
                       alt="Destaque S5" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -587,7 +742,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/3BMbhlV.png" 
                       alt="Destaque S6" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -597,7 +752,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/NwfOuJt.jpeg" 
                       alt="Destaque S7" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -607,7 +762,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/QLssNnn.png" 
                       alt="Destaque S8" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -617,7 +772,7 @@ function App() {
                     <img 
                       src="https://i.imgur.com/SSC0qZ9.png" 
                       alt="Destaque S9" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
@@ -627,22 +782,19 @@ function App() {
                     <img 
                       src="https://i.imgur.com/u0fj70v.png" 
                       alt="Destaque S10" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer"
                     />
                   )}
 
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50 z-10"></div>
                   
-                  {/* Placeholder Number */}
-                  <span className="text-6xl font-black text-white/5 group-hover:text-white/10 transition-colors duration-300 z-20 relative">
-                    S{i + 1}
-                  </span>
+                  {/* Placeholder Number Removed */}
                   
                   {/* Label Removed */}
 
                   {/* Hover Effect Overlay */}
-                  <div className="absolute inset-0 bg-[var(--color-brand-cyan)]/0 group-hover:bg-[var(--color-brand-cyan)]/5 transition-colors duration-300 z-30"></div>
+                  <div className="absolute inset-0 bg-[var(--color-brand-cyan)]/0 group-hover:bg-[var(--color-brand-cyan)]/10 transition-colors duration-300 z-30"></div>
                 </div>
               ))}
             </div>
@@ -650,7 +802,9 @@ function App() {
         </motion.div>
       </div>
 
-      {/* How it works & Channels Section */}
+      <HowItWorksSection />
+
+      {/* Channels Section */}
       <section className="py-16 border-y border-white/5 bg-[#030f1c] relative z-20 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
@@ -664,44 +818,6 @@ function App() {
         </div>
 
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* How it works content */}
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white uppercase tracking-wide">COMO FUNCIONA O <span className="texto-gradiente">IPTV?</span></h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Simples, rápido e compatível com todos os dispositivos
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-            {/* Step 1 */}
-            <div className="bg-[var(--color-brand-navy)] p-8 rounded-xl border border-white/5 text-center relative group hover:border-[var(--color-brand-cyan)]/50 transition-all duration-300 hover:-translate-y-2">
-              <div className="w-14 h-14 bg-gradient-to-br from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] rounded-full flex items-center justify-center text-[#020b16] font-bold text-2xl mx-auto mb-6 shadow-[0_0_15px_rgba(67,175,239,0.5)]">1</div>
-              <h3 className="text-lg font-bold text-white mb-3 uppercase">ESCOLHA O PLANO</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">Selecione o plano de IPTV que melhor atende sua necessidade.</p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="bg-[var(--color-brand-navy)] p-8 rounded-xl border border-white/5 text-center relative group hover:border-[var(--color-brand-cyan)]/50 transition-all duration-300 hover:-translate-y-2">
-              <div className="w-14 h-14 bg-gradient-to-br from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] rounded-full flex items-center justify-center text-[#020b16] font-bold text-2xl mx-auto mb-6 shadow-[0_0_15px_rgba(67,175,239,0.5)]">2</div>
-              <h3 className="text-lg font-bold text-white mb-3 uppercase">FALE CONOSCO</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">Clique no botão e fale direto com um suporte IPTV via WhatsApp.</p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="bg-[var(--color-brand-navy)] p-8 rounded-xl border border-white/5 text-center relative group hover:border-[var(--color-brand-cyan)]/50 transition-all duration-300 hover:-translate-y-2">
-              <div className="w-14 h-14 bg-gradient-to-br from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] rounded-full flex items-center justify-center text-[#020b16] font-bold text-2xl mx-auto mb-6 shadow-[0_0_15px_rgba(67,175,239,0.5)]">3</div>
-              <h3 className="text-lg font-bold text-white mb-3 uppercase">RECEBA O ACESSO</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">Liberação imediata! Basta configurar sua lista IPTV atualizada.</p>
-            </div>
-
-            {/* Step 4 */}
-            <div className="bg-[var(--color-brand-navy)] p-8 rounded-xl border border-white/5 text-center relative group hover:border-[var(--color-brand-cyan)]/50 transition-all duration-300 hover:-translate-y-2">
-              <div className="w-14 h-14 bg-gradient-to-br from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] rounded-full flex items-center justify-center text-[#020b16] font-bold text-2xl mx-auto mb-6 shadow-[0_0_15px_rgba(67,175,239,0.5)]">4</div>
-              <h3 className="text-lg font-bold text-white mb-3 uppercase">APERTE O PLAY</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">Comece a assistir seus conteúdos favoritos na hora em qualquer dispositivo.</p>
-            </div>
-          </div>
-
           {/* Channels Section Content */}
           <div className="text-center mb-12">
              <h2 className="text-xl md:text-2xl font-bold text-white uppercase tracking-wide">
@@ -723,10 +839,10 @@ function App() {
             }}
           >
             {[...Array(2)].map((_, groupIndex) => (
-              <div key={groupIndex} className="flex gap-8">
+              <div key={`channel-group-${groupIndex}`} className="flex gap-8">
                 {Array.from({ length: 10 }).map((_, i) => (
                   <div 
-                    key={i} 
+                    key={`channel-card-${groupIndex}-${i}`} 
                     className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#0b1623] border-2 border-white/10 flex items-center justify-center relative overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] group hover:border-[var(--color-brand-cyan)] transition-all duration-300 hover:scale-110 cursor-pointer"
                   >
                     {i === 0 ? (
@@ -768,13 +884,13 @@ function App() {
       </section>
 
       {/* Games Access Section */}
-      <section className="relative py-24 md:py-32 overflow-hidden">
+      <section className="relative py-16 md:py-32 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
             src="https://i.imgur.com/4VVJdN0.jpeg" 
             alt="Esportes e Jogos" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover blur-[2px] brightness-50"
             referrerPolicy="no-referrer"
           />
           {/* Gradient Overlay for better text readability */}
@@ -811,7 +927,7 @@ function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="inline-flex items-center gap-2 bg-[var(--color-brand-cyan)] text-[#020b16] px-8 py-4 rounded-full font-bold text-lg hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(67,175,239,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)] hover:scale-105"
+              className="inline-flex items-center gap-2 bg-[var(--color-brand-cyan)] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-[#020b16] transition-all duration-300 shadow-[0_0_20px_rgba(67,175,239,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)] hover:scale-105"
             >
               Quero assistir agora
             </motion.a>
@@ -820,8 +936,17 @@ function App() {
       </section>
 
       {/* Pricing Carousel */}
-      <section id="planos" className="py-12 bg-[#020b16]">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="planos" className="py-12 relative overflow-hidden bg-[#020b16]">
+        {/* Background Effects */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[var(--color-brand-cyan)]/5 rounded-full blur-[120px]"></div>
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#6C00FF]/5 rounded-full blur-[100px]"></div>
+          <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-[var(--color-brand-cyan)]/5 rounded-full blur-[100px]"></div>
+          {/* Subtle geometric pattern */}
+          <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+        </div>
+
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 px-2 text-center text-white">
             Planos <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Premium</span>
           </h2>
@@ -1302,7 +1427,7 @@ function FAQItem({ question, answer }: { question: string, answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-[var(--color-brand-navy)] border border-white/5 rounded-md overflow-hidden transition-all duration-300 hover:border-[var(--color-brand-cyan)]/50 hover:scale-[1.02] h-full">
+    <div className="bg-[var(--color-brand-navy)] border border-white/5 rounded-md overflow-hidden transition-all duration-300 md:hover:border-[var(--color-brand-cyan)]/50 md:hover:scale-[1.02] active:scale-[0.98] h-full">
       <button 
         className="w-full px-6 py-5 flex justify-between items-center text-left"
         onClick={() => setIsOpen(!isOpen)}
