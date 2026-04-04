@@ -28,7 +28,12 @@ import {
   MoreVertical,
   ShoppingCart,
   Key,
-  PlayCircle
+  PlayCircle,
+  Award,
+  Users,
+  ShieldCheck,
+  Globe,
+  MonitorPlay
 } from 'lucide-react';
 
 const WHATSAPP_NUMBER = "5547992733349";
@@ -242,6 +247,7 @@ const HowItWorksSection = () => {
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
+  const [activeModalTab, setActiveModalTab] = useState(0);
   const [isFeatureModalOpen, setIsFeatureModalOpen] = useState(false);
   const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
   const [isMultiplatformModalOpen, setIsMultiplatformModalOpen] = useState(false);
@@ -317,37 +323,120 @@ function App() {
         </defs>
       </svg>
 
-      {/* Logo Modal */}
+      {/* Logo Modal (Informative - Multi-tab Blue Glass) */}
       <AnimatePresence>
         {isLogoModalOpen && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
             onClick={() => setIsLogoModalOpen(false)}
           >
             <motion.div 
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.5, opacity: 0 }}
-              transition={{ type: "spring", damping: 20, stiffness: 300 }}
-              className="relative max-w-lg w-full aspect-square flex items-center justify-center"
+              initial={{ scale: 0.9, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 30 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative max-w-md w-full bg-blue-900/30 backdrop-blur-2xl border-2 border-blue-400/30 rounded-[40px] shadow-[0_0_50px_rgba(30,58,138,0.5),inset_0_0_20px_rgba(147,197,253,0.2)] overflow-visible"
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Close Button */}
               <button 
                 onClick={() => setIsLogoModalOpen(false)}
-                className="absolute -top-12 right-0 md:-right-12 text-white/70 hover:text-white transition-colors"
+                className="absolute top-6 right-8 z-20 text-white/50 hover:text-white transition-colors"
               >
-                <X className="w-8 h-8" />
+                <X className="w-6 h-6" />
               </button>
-              <div className="absolute inset-0 bg-[var(--color-brand-cyan)]/20 blur-[100px] rounded-full animate-pulse-slow"></div>
-              <img 
-                src="https://i.imgur.com/gB6o74h.jpeg" 
-                alt="Leandro TV+ Logo Grande" 
-                className="relative w-full h-full object-contain drop-shadow-[0_0_50px_rgba(67,175,239,0.3)] rounded-full"
-                referrerPolicy="no-referrer"
-              />
+
+              {/* Logo Overlapping Top */}
+              <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-20">
+                <div className="relative group">
+                  {/* Soft Ethereal Glow */}
+                  <div className="absolute -inset-4 bg-blue-500/20 blur-3xl rounded-full opacity-70 group-hover:opacity-100 transition-opacity duration-700 animate-pulse"></div>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-400/30 to-cyan-400/30 blur-md rounded-full"></div>
+                  
+                  <div className="relative h-24 w-24 rounded-full border-2 border-blue-400/40 p-1.5 bg-blue-950/40 backdrop-blur-xl shadow-2xl overflow-hidden">
+                    <img 
+                      src="https://i.imgur.com/gB6o74h.jpeg" 
+                      alt="Leandro TV+" 
+                      className="h-full w-full object-cover rounded-full"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                  
+                  {/* Floating Label */}
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-500/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-blue-200 border border-blue-400/30 shadow-lg whitespace-nowrap tracking-wider uppercase">
+                    Leandro TV+
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-16 pb-8 px-8 flex flex-col items-center text-center">
+                <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-blue-200 mb-8 tracking-tight">
+                  Sobre a Leandro TV+
+                </h2>
+
+                {/* Content Area */}
+                <div className="w-full space-y-6 text-left mb-10">
+                  <div className="flex items-start gap-4 group">
+                    <div className="mt-1 p-2.5 rounded-xl bg-blue-400/10 border border-blue-400/20 text-blue-300 group-hover:bg-blue-400 group-hover:text-white transition-colors">
+                      <Zap className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-sm">Ativação Instantânea</h3>
+                      <p className="text-blue-100/60 text-xs leading-relaxed">Receba seus dados de acesso em poucos minutos após a confirmação.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 group">
+                    <div className="mt-1 p-2.5 rounded-xl bg-blue-400/10 border border-blue-400/20 text-blue-300 group-hover:bg-blue-400 group-hover:text-white transition-colors">
+                      <Smartphone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-sm">Compatibilidade Total</h3>
+                      <p className="text-blue-100/60 text-xs leading-relaxed">Smart TVs, Celulares, Tablets, TV Box e Computadores.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 group">
+                    <div className="mt-1 p-2.5 rounded-xl bg-blue-400/10 border border-blue-400/20 text-blue-300 group-hover:bg-blue-400 group-hover:text-white transition-colors">
+                      <Rocket className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-sm">Servidores Premium</h3>
+                      <p className="text-blue-100/60 text-xs leading-relaxed">Servidores dedicados com tecnologia anti-travamento de última geração.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 group">
+                    <div className="mt-1 p-2.5 rounded-xl bg-blue-400/10 border border-blue-400/20 text-blue-300 group-hover:bg-blue-400 group-hover:text-white transition-colors">
+                      <Unlock className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-sm">Sem Fidelidade</h3>
+                      <p className="text-blue-100/60 text-xs leading-relaxed">Cancele quando quiser, sem multas ou contratos abusivos.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="w-full flex gap-4">
+                  <a 
+                    href="#planos"
+                    onClick={() => setIsLogoModalOpen(false)}
+                    className="flex-1 py-4 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-2xl shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all active:scale-95 text-center"
+                  >
+                    Ver Planos
+                  </a>
+                  <button 
+                    onClick={() => setIsLogoModalOpen(false)}
+                    className="flex-1 py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-2xl shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all active:scale-95"
+                  >
+                    Fechar
+                  </button>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}
