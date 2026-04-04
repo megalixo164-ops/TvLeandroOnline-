@@ -88,7 +88,12 @@ export function PricingCarousel({ whatsappLink }: PricingCarouselProps) {
             >
               O MAIS PROCURADO
             </motion.span>
-            <motion.h3 variants={itemVariants} className="text-2xl md:text-3xl font-black text-white tracking-tight mb-1 md:mb-2">{monthlyPlan.title}</motion.h3>
+            <motion.h3 
+              variants={itemVariants} 
+              className="text-2xl md:text-3xl font-black tracking-tight mb-1 md:mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]"
+            >
+              {monthlyPlan.title}
+            </motion.h3>
             <motion.p variants={itemVariants} className="text-gray-400 text-[10px] md:text-sm font-medium">{monthlyPlan.subtitle}</motion.p>
           </div>
 
