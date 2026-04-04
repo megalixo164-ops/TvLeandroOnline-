@@ -859,6 +859,62 @@ function App() {
                         className="absolute inset-0 w-full h-full object-cover scale-125" 
                         referrerPolicy="no-referrer"
                       />
+                    ) : i === 2 ? (
+                      <img 
+                        src="https://i.imgur.com/DA0kSNX.png" 
+                        alt="Logo 3" 
+                        className="absolute inset-0 w-full h-full object-cover scale-125" 
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : i === 3 ? (
+                      <img 
+                        src="https://i.imgur.com/G5nGQ5B.png" 
+                        alt="Logo 4" 
+                        className="absolute inset-0 w-full h-full object-cover scale-125" 
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : i === 4 ? (
+                      <img 
+                        src="https://i.imgur.com/ch1MU63.png" 
+                        alt="Logo 5" 
+                        className="absolute inset-0 w-full h-full object-cover scale-125" 
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : i === 5 ? (
+                      <img 
+                        src="https://i.imgur.com/ZqOjxMV.png" 
+                        alt="Logo 6" 
+                        className="absolute inset-0 w-full h-full object-cover scale-125" 
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : i === 6 ? (
+                      <img 
+                        src="https://i.imgur.com/lEZT3yO.png" 
+                        alt="Logo 7" 
+                        className="absolute inset-0 w-full h-full object-cover scale-125" 
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : i === 7 ? (
+                      <img 
+                        src="https://i.imgur.com/ttQ82fK.png" 
+                        alt="Logo 8" 
+                        className="absolute inset-0 w-full h-full object-cover scale-125" 
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : i === 8 ? (
+                      <img 
+                        src="https://i.imgur.com/JRkrceA.png" 
+                        alt="Logo 9" 
+                        className="absolute inset-0 w-full h-full object-cover scale-125" 
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : i === 9 ? (
+                      <img 
+                        src="https://i.imgur.com/ufhwNoh.png" 
+                        alt="Logo 10" 
+                        className="absolute inset-0 w-full h-full object-cover scale-125" 
+                        referrerPolicy="no-referrer"
+                      />
                     ) : (
                       <>
                         <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50"></div>
@@ -871,7 +927,7 @@ function App() {
                     )}
                     
                     {/* Image Placeholder Overlay (User will replace background) */}
-                    <div className={`absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors ${(i === 0 || i === 1) ? 'hidden' : ''}`}></div>
+                    <div className={`absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors ${(i === 0 || i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9) ? 'hidden' : ''}`}></div>
 
                     {/* Glow Effect */}
                     <div className="absolute inset-0 rounded-full shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] group-hover:shadow-[inset_0_0_20px_rgba(67,175,239,0.3)] transition-all duration-300"></div>
@@ -935,21 +991,25 @@ function App() {
         </div>
       </section>
 
-      {/* Pricing Carousel */}
-      <section id="planos" className="py-12 relative overflow-hidden bg-[#020b16]">
+      {/* Pricing Section */}
+      <section id="planos" className="py-24 relative overflow-hidden bg-[#020b16]">
         {/* Background Effects */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[var(--color-brand-cyan)]/5 rounded-full blur-[120px]"></div>
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#6C00FF]/5 rounded-full blur-[100px]"></div>
-          <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-[var(--color-brand-cyan)]/5 rounded-full blur-[100px]"></div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[var(--color-brand-cyan)]/10 rounded-full blur-[120px]"></div>
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[var(--color-brand-cyan)]/5 rounded-full blur-[100px]"></div>
           {/* Subtle geometric pattern */}
           <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
         </div>
 
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 px-2 text-center text-white">
-            Planos <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Premium</span>
-          </h2>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-black mb-4 text-white tracking-tight">
+              Plano <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Premium</span>
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto font-medium">
+              A melhor experiência em entretenimento com o melhor custo-benefício.
+            </p>
+          </div>
           <PricingCarousel whatsappLink={WHATSAPP_LINK} />
         </div>
       </section>
