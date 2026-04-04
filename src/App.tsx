@@ -166,6 +166,17 @@ const HowItWorksSection = () => {
 
   return (
     <section className="relative w-full bg-[#020b16] py-12 overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://i.imgur.com/IGPMYNA.jpeg" 
+          alt="Background" 
+          className="w-full h-full object-cover opacity-20"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#020b16] via-[#020b16]/60 to-[#020b16]"></div>
+      </div>
+
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16 md:mb-24">
           <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
@@ -992,7 +1003,18 @@ function App() {
       </section>
 
       {/* Pricing Section */}
-      <section id="planos" className="py-24 relative overflow-hidden bg-[#020b16]">
+      <section id="planos" className="pt-12 md:pt-16 pb-4 md:pb-8 relative overflow-hidden bg-[#020b16]">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://i.imgur.com/qvz7c99.png" 
+            alt="Background" 
+            className="w-full h-full object-cover opacity-30"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020b16] via-[#020b16]/80 to-[#020b16]"></div>
+        </div>
+
         {/* Background Effects */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[var(--color-brand-cyan)]/10 rounded-full blur-[120px]"></div>
@@ -1002,11 +1024,11 @@ function App() {
         </div>
 
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-black mb-4 text-white tracking-tight">
+          <div className="text-center mb-4 md:mb-6">
+            <h2 className="text-3xl md:text-5xl font-black mb-2 text-white tracking-tight">
               Plano <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Premium</span>
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto font-medium">
+            <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto font-medium">
               A melhor experiência em entretenimento com o melhor custo-benefício.
             </p>
           </div>
@@ -1015,9 +1037,9 @@ function App() {
       </section>
 
       {/* Customer Feedback Section */}
-      <section className="py-20 bg-[#020b16] border-y border-white/5 relative overflow-hidden">
+      <section className="py-12 md:py-16 bg-[#020b16] border-y border-white/5 relative overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
               Veja o que nossos clientes estão dizendo
             </h2>

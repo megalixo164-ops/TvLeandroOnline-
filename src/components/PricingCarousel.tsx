@@ -45,7 +45,7 @@ const itemVariants = {
 
 export function PricingCarousel({ whatsappLink }: PricingCarouselProps) {
   return (
-    <div className="w-full flex items-center justify-center py-12">
+    <div className="w-full flex items-center justify-center pt-0 pb-8 md:pb-12">
       <motion.div 
         className="w-full max-w-md px-4"
         initial="hidden"
@@ -64,7 +64,7 @@ export function PricingCarousel({ whatsappLink }: PricingCarouselProps) {
             }
           }}
           className="
-            relative flex flex-col bg-[#0a1623]/80 backdrop-blur-xl rounded-3xl md:rounded-[2.5rem] p-6 md:p-10
+            relative flex flex-col bg-[#0a1623]/80 backdrop-blur-xl rounded-3xl md:rounded-[2.5rem] p-5 md:p-10
             border border-white/10 hover:border-[var(--color-brand-cyan)]/50
             shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)]
             transition-all duration-500 group overflow-hidden
@@ -81,24 +81,24 @@ export function PricingCarousel({ whatsappLink }: PricingCarouselProps) {
             className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--color-brand-cyan)]/50 to-transparent z-20 pointer-events-none"
           />
 
-          <div className="text-center mb-6 md:mb-10">
+          <div className="text-center mb-4 md:mb-10">
             <motion.span 
               variants={itemVariants}
-              className="inline-block px-3 py-1 rounded-full bg-[var(--color-brand-cyan)]/10 text-[var(--color-brand-cyan)] text-[10px] md:text-xs font-black tracking-[0.2em] uppercase mb-4 md:mb-6 border border-[var(--color-brand-cyan)]/20"
+              className="inline-block px-3 py-1 rounded-full bg-[var(--color-brand-cyan)]/10 text-[var(--color-brand-cyan)] text-[10px] md:text-xs font-black tracking-[0.2em] uppercase mb-3 md:mb-6 border border-[var(--color-brand-cyan)]/20"
             >
               O MAIS PROCURADO
             </motion.span>
             <motion.h3 variants={itemVariants} className="text-2xl md:text-3xl font-black text-white tracking-tight mb-1 md:mb-2">{monthlyPlan.title}</motion.h3>
-            <motion.p variants={itemVariants} className="text-gray-400 text-xs md:text-sm font-medium">{monthlyPlan.subtitle}</motion.p>
+            <motion.p variants={itemVariants} className="text-gray-400 text-[10px] md:text-sm font-medium">{monthlyPlan.subtitle}</motion.p>
           </div>
 
-          <motion.div variants={itemVariants} className="mb-8 md:mb-12 flex items-baseline justify-center gap-1">
+          <motion.div variants={itemVariants} className="mb-6 md:mb-12 flex items-baseline justify-center gap-1">
             <span className="text-xl md:text-2xl font-bold text-[var(--color-brand-cyan)]">R$</span>
-            <span className="text-6xl md:text-8xl font-black text-white tracking-tighter">{monthlyPlan.price}</span>
-            <span className="text-base md:text-lg text-gray-500 font-medium">{monthlyPlan.period}</span>
+            <span className="text-5xl md:text-8xl font-black text-white tracking-tighter">{monthlyPlan.price}</span>
+            <span className="text-sm md:text-lg text-gray-500 font-medium">{monthlyPlan.period}</span>
           </motion.div>
 
-          <div className="space-y-4 md:space-y-6 mb-8 md:mb-12">
+          <div className="space-y-3 md:space-y-6 mb-6 md:mb-12">
             {monthlyPlan.benefits.map((benefit, i) => (
               <motion.div 
                 key={i} 
