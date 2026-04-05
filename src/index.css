@@ -55,6 +55,19 @@
       border-color: #00CFFF;
     }
   }
+
+  @keyframes swipe-hand {
+    0%, 100% {
+      transform: translateX(-15px) rotate(-10deg);
+    }
+    50% {
+      transform: translateX(15px) rotate(10deg);
+    }
+  }
+}
+
+@utility animate-swipe-hand {
+  animation: swipe-hand 2s ease-in-out infinite;
 }
 
 @utility animate-pulse-glow {
@@ -102,5 +115,8 @@ h1, h2, h3, h4, h5, h6 {
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+  .perspective-1000 {
+    perspective: 1000px;
   }
 }

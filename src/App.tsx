@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react';
 import { PricingCarousel } from './components/PricingCarousel';
 import { 
   Tv, 
@@ -40,7 +40,17 @@ const WHATSAPP_NUMBER = "5547992733349";
 const WHATSAPP_TEXT = "Olá, quero meu teste grátis na Leandro TV+";
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_TEXT)}`;
 
-const feedbacks = [
+interface Feedback {
+  id: number;
+  name: string;
+  avatar: string;
+  clientMsg: string;
+  clientTime: string;
+  supportMsg: string;
+  supportTime: string;
+}
+
+const feedbacks: Feedback[] = [
   {
     id: 1,
     name: "Carlos Silva",
@@ -78,6 +88,147 @@ const feedbacks = [
     supportTime: "19:12"
   }
 ];
+
+const FeedbackCard = ({ feedback, index, total, onSwipe }: any) => {
+  const x = useMotionValue(0);
+  const rotate = useTransform(x, [-200, 200], [-25, 25]);
+  const opacity = useTransform(x, [-200, -150, 0, 150, 200], [0, 1, 1, 1, 0]);
+
+  const handleDragEnd = (_, info) => {
+    if (Math.abs(info.offset.x) > 100) {
+      onSwipe();
+    }
+  };
+
+  const isTop = index === total - 1;
+
+  return (
+    <motion.div
+      style={{
+        x,
+        rotate,
+        opacity,
+        zIndex: index,
+        scale: 1 - (total - 1 - index) * 0.05,
+        y: (total - 1 - index) * 15,
+      }}
+      drag={isTop ? "x" : false}
+      dragConstraints={{ left: 0, right: 0 }}
+      onDragEnd={handleDragEnd}
+      className="absolute top-0 left-0 w-full h-[500px] flex flex-col cursor-grab active:cursor-grabbing"
+    >
+      <div className="bg-[#111b21] rounded-[2.5rem] overflow-hidden border-[8px] border-[#202c33] shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative group flex flex-col h-full">
+        {/* Phone Notch/Speaker */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#202c33] rounded-b-2xl z-20 flex items-center justify-center gap-2">
+          <div className="w-8 h-1 bg-[#2a3942] rounded-full"></div>
+          <div className="w-2 h-2 bg-[#2a3942] rounded-full"></div>
+        </div>
+
+        {/* App Header */}
+        <div className="bg-[#202c33] px-5 pt-8 pb-4 flex items-center justify-between text-[#e9edef] relative z-10">
+          <div className="flex items-center gap-3">
+            <ArrowLeft size={22} className="text-[#8696a0]" />
+            <div className="relative">
+              <img 
+                src={feedback.avatar} 
+                alt={feedback.name} 
+                className="w-11 h-11 rounded-full object-cover border-2 border-white/5"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#00a884] border-2 border-[#202c33] rounded-full"></div>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-base leading-tight text-[#e9edef]">{feedback.name}</span>
+              <span className="text-[11px] text-[#8696a0] leading-tight">Visto por último hoje às {feedback.clientTime}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 text-[#8696a0]">
+            <Video size={20} />
+            <Phone size={18} />
+            <MoreVertical size={18} />
+          </div>
+        </div>
+
+        {/* Chat Area */}
+        <div className="bg-[#0b141a] flex-1 p-5 flex flex-col relative overflow-hidden">
+          {/* Background Pattern Overlay */}
+          <div className="absolute inset-0 opacity-[0.08] bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-repeat pointer-events-none"></div>
+          
+          <div className="relative z-10 flex flex-col gap-6">
+            <div className="flex justify-center">
+              <span className="bg-[#1f2c34] text-[#8696a0] text-[11px] px-3 py-1 rounded-lg shadow-sm font-semibold uppercase tracking-wider border border-[#202c33]">Hoje</span>
+            </div>
+            
+            {/* Incoming Message (Client) */}
+            <div className="self-start relative max-w-[85%]">
+              {/* Message Tail */}
+              <svg className="absolute -left-2 top-0 text-[#202c33]" width="8" height="13" viewBox="0 0 8 13">
+                <path fill="currentColor" d="M1.533 3.568 8 12.193V1H2.812C1.042 1 .474 2.156 1.533 3.568z"></path>
+              </svg>
+              <div className="bg-[#202c33] rounded-lg rounded-tl-none p-3 shadow-md relative">
+                <p className="text-[15px] text-[#e9edef] leading-relaxed pr-12">{feedback.clientMsg}</p>
+                <div className="absolute bottom-1.5 right-2 flex items-center gap-1">
+                  <span className="text-[10px] text-[#8696a0]">{feedback.clientTime}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Outgoing Message (Support) */}
+            <div className="self-end relative max-w-[85%] ml-auto">
+              {/* Message Tail */}
+              <svg className="absolute -right-2 top-0 text-[#005c4b]" width="8" height="13" viewBox="0 0 8 13">
+                <path fill="currentColor" d="M6.467 3.568 0 12.193V1h5.188C6.958 1 7.526 2.156 6.467 3.568z"></path>
+              </svg>
+              <div className="bg-[#005c4b] rounded-lg rounded-tr-none p-3 shadow-md relative">
+                <p className="text-[15px] text-[#e9edef] leading-relaxed pr-16">{feedback.supportMsg}</p>
+                <div className="absolute bottom-1.5 right-2 flex items-center gap-0.5">
+                  <span className="text-[10px] text-[#8696a0]/90">{feedback.supportTime}</span>
+                  <CheckCheck size={15} className="text-[#53bdeb]" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Chat Input Area (Visual Only) */}
+        <div className="bg-[#202c33] p-3 px-4 flex items-center gap-3 relative z-10">
+          <div className="p-1 text-[#8696a0]"><Zap size={20} /></div>
+          <div className="flex-1 bg-[#2a3942] rounded-full px-4 py-2 text-[#8696a0] text-sm">Mensagem</div>
+          <div className="p-1 text-[#8696a0]"><Phone size={20} /></div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const FeedbackStack = ({ items }: any) => {
+  const [stack, setStack] = useState(items);
+
+  const handleSwipe = () => {
+    setStack((prev) => {
+      const newStack = [...prev];
+      const swipedItem = newStack.pop();
+      if (swipedItem) newStack.unshift(swipedItem);
+      return newStack;
+    });
+  };
+
+  return (
+    <div className="relative w-full h-full">
+      <AnimatePresence initial={false}>
+        {stack.map((feedback, index) => (
+          <FeedbackCard
+            key={feedback.id}
+            feedback={feedback}
+            index={index}
+            total={stack.length}
+            onSwipe={handleSwipe}
+          />
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const HowItWorksSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1155,10 +1306,10 @@ function App() {
 
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-4 md:mb-6">
-            <h2 className="text-3xl md:text-5xl font-black mb-2 text-white tracking-tight">
-              Plano <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Premium</span>
+            <h2 className="text-3xl md:text-5xl font-black mb-2 tracking-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Plano Premium</span>
             </h2>
-            <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto font-medium">
+            <p className="text-white text-base md:text-lg max-w-2xl mx-auto font-medium">
               A melhor experiência em entretenimento com o melhor custo-benefício.
             </p>
           </div>
@@ -1178,81 +1329,21 @@ function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 mb-12 max-w-3xl mx-auto">
-            {feedbacks.map((feedback, index) => (
-              <motion.div
-                key={feedback.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-[#111b21] rounded-2xl overflow-hidden border border-[#202c33] shadow-2xl relative group hover:border-[var(--color-brand-cyan)]/30 transition-all duration-300 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]"
-              >
-                {/* App Header */}
-                <div className="bg-[#202c33] px-4 py-3 flex items-center justify-between text-[#e9edef] shadow-md relative z-10">
-                  <div className="flex items-center gap-3">
-                    <ArrowLeft size={20} className="cursor-pointer text-[#8696a0]" />
-                    <div className="relative">
-                      <img 
-                        src={feedback.avatar} 
-                        alt={feedback.name} 
-                        className="w-10 h-10 rounded-full object-cover border border-white/10"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-sm leading-tight text-[#e9edef]">{feedback.name}</span>
-                      <span className="text-[10px] text-[#8696a0] leading-tight">Online agora</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-5 text-[#8696a0]">
-                    <Video size={20} />
-                    <Phone size={18} />
-                    <MoreVertical size={18} />
-                  </div>
-                </div>
-
-                {/* Chat Area */}
-                <div className="bg-[#0b141a] p-4 flex flex-col relative h-full min-h-[180px]">
-                  {/* Background Pattern Overlay */}
-                  <div className="absolute inset-0 opacity-[0.06] bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-repeat pointer-events-none"></div>
-                  
-                  <div className="relative z-10 flex flex-col h-full justify-center">
-                    <div className="flex justify-center mb-4">
-                      <span className="bg-[#1f2c34] text-[#8696a0] text-[10px] px-2 py-0.5 rounded-lg shadow-sm font-medium uppercase tracking-wide border border-[#202c33]">Hoje</span>
-                    </div>
-                    
-                    {/* Incoming Message (Client) */}
-                    <div className="self-start bg-[#202c33] rounded-lg rounded-tl-none p-2 px-3 shadow-sm max-w-[85%] mb-3 relative group">
-                      <p className="text-sm text-[#e9edef] leading-snug">{feedback.clientMsg}</p>
-                      <span className="text-[10px] text-[#8696a0] float-right mt-1 ml-2">{feedback.clientTime}</span>
-                    </div>
-
-                    {/* Outgoing Message (Support) */}
-                    <div className="self-end bg-[#005c4b] rounded-lg rounded-tr-none p-2 px-3 shadow-sm max-w-[85%] relative group ml-auto">
-                      <p className="text-sm text-[#e9edef] leading-snug">{feedback.supportMsg}</p>
-                      <div className="flex items-center justify-end gap-1 mt-1 ml-1 float-right">
-                        <span className="text-[10px] text-[#8696a0]/80">{feedback.supportTime}</span>
-                        <CheckCheck size={14} className="text-[#53bdeb]" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+          {/* Feedback Card Stack */}
+          <div className="relative h-[560px] w-full max-w-[400px] mx-auto mb-2 perspective-1000">
+            <FeedbackStack items={feedbacks} />
+          </div>
+          
+          {/* Swipe Instruction */}
+          <div className="flex items-center justify-center gap-4 text-white/70 animate-pulse mb-16 relative z-20">
+            <ChevronLeft size={24} className="text-[var(--color-brand-cyan)]" />
+            <span className="text-sm md:text-base font-black uppercase tracking-[0.3em] drop-shadow-[0_0_10px_rgba(67,175,239,0.3)]">
+              Deslize para ver mais
+            </span>
+            <ChevronRight size={24} className="text-[var(--color-brand-cyan)]" />
           </div>
 
-          <div className="text-center">
-            <a 
-              href={WHATSAPP_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#008F4C] to-[#00FF7F] text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-[0_0_20px_rgba(0,255,127,0.2)] hover:shadow-[0_0_30px_rgba(0,255,127,0.5)] hover:scale-105 active:scale-95"
-            >
-              <MessageCircle className="w-5 h-5" />
-              Quero testar o aplicativo
-            </a>
-          </div>
+          <div className="mb-12"></div>
         </div>
       </section>
 
