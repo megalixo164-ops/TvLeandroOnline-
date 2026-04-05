@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react';
 import { PricingCarousel } from './components/PricingCarousel';
 import { 
@@ -89,35 +89,60 @@ const feedbacks: Feedback[] = [
   }
 ];
 
-const FeedbackCard = ({ feedback, index, total, onSwipe }: any) => {
+const FeedbackCard = memo(({ feedback, index, total, onSwipe }: any) => {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-25, 25]);
   const opacity = useTransform(x, [-200, -150, 0, 150, 200], [0, 1, 1, 1, 0]);
 
-  const handleDragEnd = (_, info) => {
-    if (Math.abs(info.offset.x) > 100) {
+  const handleDragEnd = (_: any, info: any) => {
+    const swipeThreshold = 100;
+    const velocityThreshold = 500;
+
+    if (Math.abs(info.offset.x) > swipeThreshold || Math.abs(info.velocity.x) > velocityThreshold) {
       onSwipe();
     }
+    // The drag constraints will handle snapping back to 0 if not swiped
   };
 
   const isTop = index === total - 1;
+  const depth = total - 1 - index;
+
+  useEffect(() => {
+    if (!isTop) {
+      x.set(0);
+    }
+  }, [isTop, x]);
 
   return (
     <motion.div
+      initial={false}
+      animate={{
+        scale: 1 - depth * 0.05,
+        y: depth * 15,
+        opacity: 1,
+        zIndex: index,
+      }}
       style={{
         x,
         rotate,
         opacity,
-        zIndex: index,
-        scale: 1 - (total - 1 - index) * 0.05,
-        y: (total - 1 - index) * 15,
+        willChange: "transform, opacity",
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        mass: 1,
       }}
       drag={isTop ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.7}
+      dragMomentum={false}
+      dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
       onDragEnd={handleDragEnd}
-      className="absolute top-0 left-0 w-full h-[500px] flex flex-col cursor-grab active:cursor-grabbing"
+      className="absolute top-0 left-0 w-full h-[500px] flex flex-col cursor-grab active:cursor-grabbing touch-none"
     >
-      <div className="bg-[#111b21] rounded-[2.5rem] overflow-hidden border-[8px] border-[#202c33] shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative group flex flex-col h-full">
+      <div className="bg-[#111b21] rounded-[2.5rem] overflow-hidden border-[8px] border-[#202c33] shadow-2xl md:shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative group flex flex-col h-full">
         {/* Phone Notch/Speaker */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#202c33] rounded-b-2xl z-20 flex items-center justify-center gap-2">
           <div className="w-8 h-1 bg-[#2a3942] rounded-full"></div>
@@ -199,33 +224,31 @@ const FeedbackCard = ({ feedback, index, total, onSwipe }: any) => {
       </div>
     </motion.div>
   );
-};
+});
 
 const FeedbackStack = ({ items }: any) => {
   const [stack, setStack] = useState(items);
 
-  const handleSwipe = () => {
+  const handleSwipe = useCallback(() => {
     setStack((prev) => {
       const newStack = [...prev];
       const swipedItem = newStack.pop();
       if (swipedItem) newStack.unshift(swipedItem);
       return newStack;
     });
-  };
+  }, []);
 
   return (
     <div className="relative w-full h-full">
-      <AnimatePresence initial={false}>
-        {stack.map((feedback, index) => (
-          <FeedbackCard
-            key={feedback.id}
-            feedback={feedback}
-            index={index}
-            total={stack.length}
-            onSwipe={handleSwipe}
-          />
-        ))}
-      </AnimatePresence>
+      {stack.map((feedback, index) => (
+        <FeedbackCard
+          key={feedback.id}
+          feedback={feedback}
+          index={index}
+          total={stack.length}
+          onSwipe={handleSwipe}
+        />
+      ))}
     </div>
   );
 };
