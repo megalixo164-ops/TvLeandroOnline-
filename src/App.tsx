@@ -451,10 +451,10 @@ function App() {
         }`}
       >
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <div 
-              className="flex items-center gap-3 group cursor-pointer"
+              className="flex items-center gap-4 group cursor-pointer"
               onClick={() => setIsLogoModalOpen(true)}
             >
               <div className="relative">
@@ -463,12 +463,12 @@ function App() {
                 <img 
                   src="https://i.imgur.com/gB6o74h.jpeg" 
                   alt="Leandro TV+" 
-                  className="relative h-12 w-12 object-cover rounded-full border-2 border-blue-400/50 brightness-110 contrast-110 shadow-[0_0_15px_rgba(67,175,239,0.3)]" 
+                  className="relative h-14 w-14 object-cover rounded-full border-2 border-blue-400/50 brightness-110 contrast-110 shadow-[0_0_15px_rgba(67,175,239,0.3)]" 
                   referrerPolicy="no-referrer" 
                 />
               </div>
-              <span className="text-xl font-bold tracking-tight text-white hidden sm:block">
-                Leandro <span className="text-blue-400">TV+</span>
+              <span className="text-2xl font-black tracking-tighter text-white hidden sm:block">
+                Leandro TV+
               </span>
             </div>
 
@@ -480,47 +480,86 @@ function App() {
               <a href="#duvidas" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Dúvidas</a>
             </nav>
 
-            {/* CTA Button */}
-            <div className="hidden md:flex">
-              <a 
-                href={WHATSAPP_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gradient-to-r from-[#008F4C] to-[#00FF7F] text-white px-6 py-2.5 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(0,255,127,0.2)] hover:shadow-[0_0_25px_rgba(0,255,127,0.5)] hover:scale-105 active:scale-95"
-              >
-                Teste Grátis
-              </a>
-            </div>
-
             {/* Mobile Menu Button */}
             <button 
               className="md:hidden p-2 text-gray-300 hover:text-white transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+              {isMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Nav */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-blue-900/40 backdrop-blur-md absolute w-full shadow-2xl">
-            <div className="px-4 pt-2 pb-6 space-y-4">
-              <a href="#inicio" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-white transition-colors">Início</a>
-              <a href="#recursos" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-white transition-colors">Sobre</a>
-              <a href="#planos" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-white transition-colors">Planos</a>
-              <a href="#duvidas" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-white transition-colors">Dúvidas</a>
-              <a 
-                href={WHATSAPP_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full text-center bg-gradient-to-r from-[#008F4C] to-[#00FF7F] text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(0,255,127,0.2)] hover:shadow-[0_0_25px_rgba(0,255,127,0.5)] hover:scale-105"
+        {/* Mobile Nav Sidebar */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <>
+              {/* Backdrop Overlay */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMenuOpen(false)}
+                className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm md:hidden"
+              />
+              
+              {/* Sidebar Content */}
+              <motion.div 
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="fixed top-0 right-0 bottom-0 w-[280px] z-[70] bg-blue-950/40 backdrop-blur-2xl border-l border-blue-400/20 shadow-2xl md:hidden flex flex-col"
               >
-                Teste Grátis
-              </a>
-            </div>
-          </div>
-        )}
+                {/* Sidebar Header */}
+                <div className="p-6 flex justify-between items-center border-b border-blue-400/10">
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src="https://i.imgur.com/gB6o74h.jpeg" 
+                      alt="Logo" 
+                      className="h-10 w-10 rounded-full border border-blue-400/30"
+                      referrerPolicy="no-referrer"
+                    />
+                    <span className="text-lg font-bold text-white tracking-tight">Leandro TV+</span>
+                  </div>
+                  <button 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="p-2 text-gray-300 hover:text-white transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {/* Sidebar Links */}
+                <div className="flex-1 px-6 py-8 space-y-6 overflow-y-auto">
+                  <a href="#inicio" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
+                    <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    Início
+                  </a>
+                  <a href="#recursos" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
+                    <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    Sobre
+                  </a>
+                  <a href="#planos" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
+                    <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    Planos
+                  </a>
+                  <a href="#duvidas" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
+                    <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    Dúvidas
+                  </a>
+                </div>
+
+                {/* Sidebar Footer */}
+                <div className="p-6 border-t border-blue-400/10">
+                  <p className="text-[10px] text-center text-blue-100/30 uppercase tracking-widest">
+                    Leandro TV+ © 2026
+                  </p>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Hero Section (Netflix Style) */}
