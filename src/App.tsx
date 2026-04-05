@@ -489,80 +489,78 @@ function App() {
             </button>
           </div>
         </div>
-
-        {/* Mobile Nav Sidebar */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <>
-              {/* Backdrop Overlay */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setIsMenuOpen(false)}
-                className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm md:hidden"
-              />
-              
-              {/* Sidebar Content */}
-              <motion.div 
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed top-0 right-0 bottom-0 w-[280px] z-[70] bg-blue-950/40 backdrop-blur-2xl border-l border-blue-400/20 shadow-2xl md:hidden flex flex-col"
-              >
-                {/* Sidebar Header */}
-                <div className="p-6 flex justify-between items-center border-b border-blue-400/10">
-                  <div className="flex items-center gap-3">
-                    <img 
-                      src="https://i.imgur.com/gB6o74h.jpeg" 
-                      alt="Logo" 
-                      className="h-10 w-10 rounded-full border border-blue-400/30"
-                      referrerPolicy="no-referrer"
-                    />
-                    <span className="text-lg font-bold text-white tracking-tight">Leandro TV+</span>
-                  </div>
-                  <button 
-                    onClick={() => setIsMenuOpen(false)}
-                    className="p-2 text-gray-300 hover:text-white transition-colors"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
-                </div>
-
-                {/* Sidebar Links */}
-                <div className="flex-1 px-6 py-8 space-y-6 overflow-y-auto">
-                  <a href="#inicio" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
-                    <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    Início
-                  </a>
-                  <a href="#recursos" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
-                    <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    Sobre
-                  </a>
-                  <a href="#planos" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
-                    <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    Planos
-                  </a>
-                  <a href="#duvidas" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
-                    <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    Dúvidas
-                  </a>
-                </div>
-
-                {/* Sidebar Footer */}
-                <div className="p-6 border-t border-blue-400/10">
-                  <p className="text-[10px] text-center text-blue-100/30 uppercase tracking-widest">
-                    Leandro TV+ © 2026
-                  </p>
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
       </header>
 
-      {/* Hero Section (Netflix Style) */}
+      {/* Mobile Nav Sidebar */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Backdrop Overlay */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm md:hidden"
+            />
+            
+            {/* Sidebar Content */}
+            <motion.div 
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 bottom-0 w-[280px] z-[70] bg-blue-950/40 backdrop-blur-2xl border-l border-blue-400/20 shadow-2xl md:hidden flex flex-col"
+            >
+              {/* Sidebar Header */}
+              <div className="p-6 flex justify-between items-center border-b border-blue-400/10">
+                <div className="flex items-center gap-3">
+                  <img 
+                    src="https://i.imgur.com/gB6o74h.jpeg" 
+                    alt="Logo" 
+                    className="h-10 w-10 rounded-full border border-blue-400/30"
+                    referrerPolicy="no-referrer"
+                  />
+                  <span className="text-lg font-bold text-white tracking-tight">Leandro TV+</span>
+                </div>
+                <button 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 text-gray-300 hover:text-white transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Sidebar Links */}
+              <div className="flex-1 px-6 py-8 space-y-6 overflow-y-auto">
+                <a href="#inicio" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
+                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  Início
+                </a>
+                <a href="#recursos" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
+                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  Sobre
+                </a>
+                <a href="#planos" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
+                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  Planos
+                </a>
+                <a href="#duvidas" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
+                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  Dúvidas
+                </a>
+              </div>
+
+              {/* Sidebar Footer */}
+              <div className="p-6 border-t border-blue-400/10">
+                <p className="text-[10px] text-center text-blue-100/30 uppercase tracking-widest">
+                  Leandro TV+ © 2026
+                </p>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
       <section id="inicio" className="relative min-h-fit md:h-[90vh] md:min-h-[600px] w-full flex items-center pt-24 pb-8 md:py-0">
         {/* Background Image with Cinematic Overlay */}
         <div className="absolute inset-0 z-0 overflow-hidden">
