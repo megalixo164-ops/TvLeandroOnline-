@@ -446,26 +446,30 @@ function App() {
       <header 
         className={`fixed top-0 w-full z-50 transition-all duration-500 ${
           isScrolled 
-            ? 'bg-[var(--color-brand-navy-dark)] shadow-[0_4px_30px_rgba(0,0,0,0.5)] py-2' 
-            : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-4'
+            ? 'bg-blue-900/20 backdrop-blur-sm py-2 shadow-[0_4px_30px_rgba(0,0,0,0.3)]' 
+            : 'bg-transparent py-4'
         }`}
       >
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div 
-              className="flex items-center gap-2 group cursor-pointer"
+              className="flex items-center gap-3 group cursor-pointer"
               onClick={() => setIsLogoModalOpen(true)}
             >
               <div className="relative">
-                <div className="absolute -inset-1 bg-[var(--color-brand-cyan)]/30 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {/* Subtle blue border glow */}
+                <div className="absolute -inset-1 bg-blue-500/40 blur-md rounded-full opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <img 
                   src="https://i.imgur.com/gB6o74h.jpeg" 
                   alt="Leandro TV+" 
-                  className="relative h-12 w-12 object-cover rounded-full border-2 border-[var(--color-brand-cyan)]/30 brightness-110 contrast-110 shadow-[0_0_15px_rgba(67,175,239,0.2)]" 
+                  className="relative h-12 w-12 object-cover rounded-full border-2 border-blue-400/50 brightness-110 contrast-110 shadow-[0_0_15px_rgba(67,175,239,0.3)]" 
                   referrerPolicy="no-referrer" 
                 />
               </div>
+              <span className="text-xl font-bold tracking-tight text-white hidden sm:block">
+                Leandro <span className="text-blue-400">TV+</span>
+              </span>
             </div>
 
             {/* Desktop Nav */}
@@ -490,22 +494,22 @@ function App() {
 
             {/* Mobile Menu Button */}
             <button 
-              className="md:hidden p-2 text-gray-400 hover:text-white"
+              className="md:hidden p-2 text-gray-300 hover:text-white transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Nav */}
         {isMenuOpen && (
-          <div className="md:hidden bg-[var(--color-brand-navy-dark)] border-b border-white/10 absolute w-full shadow-2xl">
+          <div className="md:hidden bg-blue-900/40 backdrop-blur-md absolute w-full shadow-2xl">
             <div className="px-4 pt-2 pb-6 space-y-4">
-              <a href="#inicio" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[var(--color-brand-cyan)] transition-colors">Início</a>
-              <a href="#recursos" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[var(--color-brand-cyan)] transition-colors">Sobre</a>
-              <a href="#planos" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[var(--color-brand-cyan)] transition-colors">Planos</a>
-              <a href="#duvidas" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-[var(--color-brand-cyan)] transition-colors">Dúvidas</a>
+              <a href="#inicio" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-white transition-colors">Início</a>
+              <a href="#recursos" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-white transition-colors">Sobre</a>
+              <a href="#planos" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-white transition-colors">Planos</a>
+              <a href="#duvidas" onClick={() => setIsMenuOpen(false)} className="block text-base font-medium text-gray-300 hover:text-white transition-colors">Dúvidas</a>
               <a 
                 href={WHATSAPP_LINK}
                 target="_blank"
