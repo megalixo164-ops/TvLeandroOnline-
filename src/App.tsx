@@ -89,7 +89,7 @@ const feedbacks: Feedback[] = [
   }
 ];
 
-const FeedbackCard = memo(({ feedback, index, total, onSwipe }: any) => {
+const FeedbackCard = memo(({ feedback, index, total, onSwipe, depth }: any) => {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-25, 25]);
   const opacity = useTransform(x, [-200, -150, 0, 150, 200], [0, 1, 1, 1, 0]);
@@ -101,11 +101,9 @@ const FeedbackCard = memo(({ feedback, index, total, onSwipe }: any) => {
     if (Math.abs(info.offset.x) > swipeThreshold || Math.abs(info.velocity.x) > velocityThreshold) {
       onSwipe();
     }
-    // The drag constraints will handle snapping back to 0 if not swiped
   };
 
-  const isTop = index === total - 1;
-  const depth = total - 1 - index;
+  const isTop = depth === 0;
 
   useEffect(() => {
     if (!isTop) {
@@ -119,30 +117,32 @@ const FeedbackCard = memo(({ feedback, index, total, onSwipe }: any) => {
       animate={{
         scale: 1 - depth * 0.05,
         y: depth * 15,
-        opacity: 1,
-        zIndex: index,
+        opacity: depth > 2 ? 0 : 1,
       }}
       style={{
         x,
         rotate,
         opacity,
+        zIndex: total - depth,
         willChange: "transform, opacity",
+        transformStyle: "preserve-3d",
+        backfaceVisibility: "hidden",
       }}
       transition={{
         type: "spring",
-        stiffness: 300,
-        damping: 30,
-        mass: 1,
+        stiffness: 400,
+        damping: 40,
+        mass: 0.8,
       }}
       drag={isTop ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.7}
+      dragElastic={0.6}
       dragMomentum={false}
       dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
       onDragEnd={handleDragEnd}
       className="absolute top-0 left-0 w-full h-[500px] flex flex-col cursor-grab active:cursor-grabbing touch-none"
     >
-      <div className="bg-[#111b21] rounded-[2.5rem] overflow-hidden border-[8px] border-[#202c33] shadow-2xl md:shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative group flex flex-col h-full">
+      <div className="bg-[#111b21] rounded-[2.5rem] overflow-hidden border-[8px] border-[#202c33] shadow-xl md:shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative group flex flex-col h-full transform-gpu">
         {/* Phone Notch/Speaker */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#202c33] rounded-b-2xl z-20 flex items-center justify-center gap-2">
           <div className="w-8 h-1 bg-[#2a3942] rounded-full"></div>
@@ -238,17 +238,24 @@ const FeedbackStack = ({ items }: any) => {
     });
   }, []);
 
+  // Only render the top 3 cards for maximum performance
+  const visibleCards = stack.slice(-3);
+
   return (
     <div className="relative w-full h-full">
-      {stack.map((feedback, index) => (
-        <FeedbackCard
-          key={feedback.id}
-          feedback={feedback}
-          index={index}
-          total={stack.length}
-          onSwipe={handleSwipe}
-        />
-      ))}
+      {visibleCards.map((feedback, index) => {
+        const depth = visibleCards.length - 1 - index;
+        return (
+          <FeedbackCard
+            key={feedback.id}
+            feedback={feedback}
+            index={index}
+            total={stack.length}
+            depth={depth}
+            onSwipe={handleSwipe}
+          />
+        );
+      })}
     </div>
   );
 };
