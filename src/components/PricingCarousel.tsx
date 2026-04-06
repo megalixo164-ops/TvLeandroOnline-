@@ -10,7 +10,7 @@ const monthlyPlan = {
   id: 'mensal',
   title: 'PLANO MENSAL',
   subtitle: 'Acesso completo por 30 dias',
-  price: '25,00',
+  price: '29,90',
   period: '/mês',
   benefits: [
     '+100.000 Conteúdos (Canais, Filmes e Séries)',
@@ -73,14 +73,6 @@ export function PricingCarousel({ whatsappLink }: PricingCarouselProps) {
           {/* Aesthetic Glow Effect */}
           <div className="absolute -inset-px bg-gradient-to-b from-[var(--color-brand-cyan)]/20 to-transparent rounded-3xl md:rounded-[2.5rem] -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           
-          {/* Materializing Scanline Effect */}
-          <motion.div 
-            initial={{ top: "-100%" }}
-            animate={{ top: "200%" }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear", repeatDelay: 3 }}
-            className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--color-brand-cyan)]/50 to-transparent z-20 pointer-events-none"
-          />
-
           <div className="text-center mb-4 md:mb-10">
             <motion.span 
               variants={itemVariants}
@@ -125,9 +117,9 @@ export function PricingCarousel({ whatsappLink }: PricingCarouselProps) {
               rel="noopener noreferrer"
               className="
                 w-full block text-center py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-lg md:text-xl 
-                bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] 
-                text-[#020b16] shadow-[0_10px_30px_rgba(67,175,239,0.3)] 
-                hover:shadow-[0_15px_40px_rgba(67,175,239,0.5)] 
+                bg-gradient-to-r from-[#008F4C] to-[#00FF7F] 
+                text-white shadow-[0_10px_30px_rgba(0,255,127,0.3)] 
+                hover:shadow-[0_15px_40px_rgba(0,255,127,0.5)] 
                 hover:translate-y-[-2px] active:translate-y-[0px]
                 transition-all duration-300
               "

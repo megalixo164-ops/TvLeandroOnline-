@@ -33,12 +33,33 @@ import {
   Users,
   ShieldCheck,
   Globe,
-  MonitorPlay
+  MonitorPlay,
+  HelpCircle
 } from 'lucide-react';
 
 const WHATSAPP_NUMBER = "5547992733349";
 const WHATSAPP_TEXT = "Olá, quero meu teste grátis na Leandro TV+";
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_TEXT)}`;
+
+const revealVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.8, ease: [0.21, 1.02, 0.47, 0.98] }
+  }
+};
+
+const containerRevealVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1
+    }
+  }
+};
 
 interface Feedback {
   id: number;
@@ -86,6 +107,33 @@ const feedbacks: Feedback[] = [
     clientTime: "19:10",
     supportMsg: "Focamos muito na estabilidade! Boa novela pra você 📺",
     supportTime: "19:12"
+  },
+  {
+    id: 7,
+    name: "Luciana Costa",
+    avatar: "https://randomuser.me/api/portraits/women/45.jpg",
+    clientMsg: "Gente, tô chocada com a quantidade de filmes que tem! Tem tudo que tá no cinema e muito mais, tô amando real.",
+    clientTime: "14:15",
+    supportMsg: "Ficamos felizes que gostou! Nossa biblioteca de filmes é atualizada toda semana com os últimos lançamentos 🎬",
+    supportTime: "14:20"
+  },
+  {
+    id: 8,
+    name: "Ricardo Santos",
+    avatar: "https://randomuser.me/api/portraits/men/46.jpg",
+    clientMsg: "Finalmente um IPTV que não cai no meio do jogo do Flamengo kkkk valeu Leandro!",
+    clientTime: "16:45",
+    supportMsg: "Aqui o sinal é garantido até o apito final! Valeu pela confiança ⚽",
+    supportTime: "16:48"
+  },
+  {
+    id: 9,
+    name: "Juliana Pereira",
+    avatar: "https://randomuser.me/api/portraits/women/50.jpg",
+    clientMsg: "Minha filha tá amando os desenhos, e eu os filmes. Recomendo demais!",
+    clientTime: "20:30",
+    supportMsg: "Ficamos felizes em divertir toda a família! Aproveitem bastante 🍿",
+    supportTime: "20:35"
   }
 ];
 
@@ -351,7 +399,7 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section className="relative w-full bg-[#020b16] py-12 overflow-hidden">
+    <section id="como-funciona" className="relative w-full bg-[#020b16] py-12 overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
@@ -363,12 +411,18 @@ const HowItWorksSection = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-[#020b16] via-[#020b16]/60 to-[#020b16]"></div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <motion.div 
+        variants={containerRevealVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+      >
         <div className="text-center mb-16 md:mb-24">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+          <motion.h2 variants={revealVariants} className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
             COMO FUNCIONA O <span className="text-[#00CFFF] drop-shadow-[0_0_15px_rgba(0,207,255,0.5)]">IPTV?</span>
-          </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">Siga nossa jornada simples e rápida para ter acesso ao melhor entretenimento.</p>
+          </motion.h2>
+          <motion.p variants={revealVariants} className="text-gray-400 text-lg max-w-2xl mx-auto">Siga nossa jornada simples e rápida para ter acesso ao melhor entretenimento.</motion.p>
         </div>
 
         <div className="relative w-full max-w-5xl mx-auto" ref={containerRef}>
@@ -420,7 +474,7 @@ const HowItWorksSection = () => {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
@@ -612,7 +666,7 @@ function App() {
                   </a>
                   <button 
                     onClick={() => setIsLogoModalOpen(false)}
-                    className="flex-1 py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-2xl shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all active:scale-95"
+                    className="flex-1 py-4 bg-red-500 hover:bg-red-400 text-white font-bold rounded-2xl shadow-[0_0_20px_rgba(239,68,68,0.4)] transition-all active:scale-95"
                   >
                     Fechar
                   </button>
@@ -653,11 +707,13 @@ function App() {
               </span>
             </div>
 
-            {/* Desktop Nav */}
+      {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-8">
               <a href="#inicio" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Início</a>
+              <a href="#como-funciona" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Como Funciona</a>
               <a href="#recursos" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Sobre</a>
               <a href="#planos" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Planos</a>
+              <a href="#feedbacks" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Depoimentos</a>
               <a href="#duvidas" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Dúvidas</a>
             </nav>
 
@@ -718,6 +774,10 @@ function App() {
                   <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   Início
                 </a>
+                <a href="#como-funciona" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
+                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  Como Funciona
+                </a>
                 <a href="#recursos" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
                   <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   Sobre
@@ -725,6 +785,10 @@ function App() {
                 <a href="#planos" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
                   <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   Planos
+                </a>
+                <a href="#feedbacks" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
+                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  Depoimentos
                 </a>
                 <a href="#duvidas" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
                   <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -937,20 +1001,27 @@ function App() {
           <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-brand-navy-dark)] via-[var(--color-brand-navy-dark)]/80 to-[var(--color-brand-navy-dark)]"></div>
         </div>
 
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <h2 className="text-2xl md:text-3xl font-bold mb-2 px-2 text-white">Por Que Nos Escolher?</h2>
-          <h3 className="text-xl md:text-2xl font-bold mb-4 px-2 uppercase tracking-wide">
+        <motion.div 
+          variants={containerRevealVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        >
+          <motion.h2 variants={revealVariants} className="text-2xl md:text-3xl font-bold mb-2 px-2 text-white">Por Que Nos Escolher?</motion.h2>
+          <motion.h3 variants={revealVariants} className="text-xl md:text-2xl font-bold mb-4 px-2 uppercase tracking-wide">
             <span className="texto-gradiente">O MELHOR SERVIÇO DE IPTV PREMIUM DO BRASIL</span>
-          </h3>
+          </motion.h3>
           
-          <p className="text-gray-300 px-2 mb-8 max-w-4xl text-lg leading-relaxed">
+          <motion.p variants={revealVariants} className="text-gray-300 px-2 mb-8 max-w-4xl text-lg leading-relaxed">
             A Leandro TV+ é referência em Streaming de alta performance. Oferecemos o melhor IPTV do Brasil para quem busca qualidade, estabilidade e zero travamentos. Esqueça as antenas, fiações e instalações complicadas: com nossa lista IPTV atualizada, você tem o mundo do entretenimento na palma da sua mão.
-          </p>
+          </motion.p>
 
           <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8 pb-8 pt-4 px-2 max-w-5xl mx-auto">
             {features.slice(0, 4).map((feature, index) => (
-              <div 
+              <motion.div 
                 key={`${feature.id}-${index}`}
+                variants={revealVariants}
                 onClick={feature.action}
                 className="w-full aspect-[4/5] md:aspect-square bg-[#0a1623] rounded-2xl border border-white/10 relative group cursor-pointer transition-all duration-500 hover:scale-[1.02] md:hover:scale-105 hover:z-30 hover:shadow-[0_20px_50px_-10px_rgba(67,175,239,0.2)] overflow-hidden flex flex-col items-center justify-center p-4 md:p-8"
               >
@@ -971,23 +1042,23 @@ function App() {
                 
                 {/* Border Glow Effect */}
                 <div className="absolute inset-0 border-2 border-[var(--color-brand-cyan)]/0 group-hover:border-[var(--color-brand-cyan)]/40 rounded-2xl transition-all duration-500 z-30 pointer-events-none"></div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
-          <p className="text-gray-300 px-2 mb-8 max-w-4xl text-lg leading-relaxed">
+          <motion.p variants={revealVariants} className="text-gray-300 px-2 mb-8 max-w-4xl text-lg leading-relaxed">
             Seja para assistir ao futebol ao vivo, filmes recém-lançados ou maratonar suas séries favoritas, nossa infraestrutura de IPTV premium entrega a menor latência e a melhor fidelidade de som e imagem com qualidade 4K.
-          </p>
+          </motion.p>
 
-          <div className="flex justify-center md:justify-start px-2">
+          <motion.div variants={revealVariants} className="flex justify-center md:justify-start px-2">
             <a 
               href="#planos"
               className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#008F4C] to-[#00FF7F] text-white px-8 py-3.5 rounded-full font-bold text-lg transition-all shadow-[0_0_20px_rgba(0,255,127,0.2)] hover:shadow-[0_0_30px_rgba(0,255,127,0.5)] hover:scale-105 active:scale-95"
             >
               CONHECER A LEANDRO TV+
             </a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Infinite Movie Carousel */}
@@ -1139,14 +1210,20 @@ function App() {
           <div className="absolute inset-0 bg-[#030f1c]/80"></div>
         </div>
 
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div 
+          variants={containerRevealVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        >
           {/* Channels Section Content */}
-          <div className="text-center mb-12">
+          <motion.div variants={revealVariants} className="text-center mb-12">
              <h2 className="text-xl md:text-2xl font-bold text-white uppercase tracking-wide">
                Tenha acesso a todos os <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Canais e plataformas streaming</span> do Brasil
              </h2>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Carousel */}
         <div className="relative w-full overflow-hidden">
@@ -1275,23 +1352,23 @@ function App() {
           <div className="absolute inset-0 bg-gradient-to-r from-[#020b16] via-[#020b16]/80 to-transparent"></div>
         </div>
 
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div 
+          variants={containerRevealVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        >
           <div className="max-w-2xl">
             <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              variants={revealVariants}
               className="text-3xl md:text-5xl font-black text-white mb-6 uppercase leading-tight"
             >
               Com a <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Leandro TV+</span> você tem acesso a todos os seus <span className="text-[var(--color-brand-cyan)]">jogos</span>
             </motion.h2>
             
             <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              variants={revealVariants}
               className="text-gray-300 text-lg md:text-xl mb-8 font-medium"
             >
               Não perca nenhum lance do seu time do coração. Acompanhe campeonatos nacionais e internacionais com a melhor qualidade de imagem.
@@ -1301,16 +1378,13 @@ function App() {
               href={WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              variants={revealVariants}
               className="inline-flex items-center gap-2 bg-[var(--color-brand-cyan)] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-[#020b16] transition-all duration-300 shadow-[0_0_20px_rgba(67,175,239,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)] hover:scale-105"
             >
               Quero assistir agora
             </motion.a>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Pricing Section */}
@@ -1334,35 +1408,60 @@ function App() {
           <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
         </div>
 
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div 
+          variants={containerRevealVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        >
           <div className="text-center mb-4 md:mb-6">
-            <h2 className="text-3xl md:text-5xl font-black mb-2 tracking-tight">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Plano Premium</span>
-            </h2>
-            <p className="text-white text-base md:text-lg max-w-2xl mx-auto font-medium">
+            <motion.h2 variants={revealVariants} className="text-3xl md:text-5xl font-black mb-2 tracking-tight text-white">
+              Plano <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Premium</span>
+            </motion.h2>
+            <motion.p variants={revealVariants} className="text-white text-base md:text-lg max-w-2xl mx-auto font-medium">
               A melhor experiência em entretenimento com o melhor custo-benefício.
-            </p>
+            </motion.p>
           </div>
-          <PricingCarousel whatsappLink={WHATSAPP_LINK} />
-        </div>
+          <motion.div variants={revealVariants}>
+            <PricingCarousel whatsappLink={WHATSAPP_LINK} />
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Customer Feedback Section */}
-      <section className="py-12 md:py-16 bg-[#020b16] border-y border-white/5 relative overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section id="feedbacks" className="py-12 md:py-16 bg-[#020b16] border-y border-white/5 relative overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://i.imgur.com/3mEeRXL.png" 
+            alt="Background" 
+            className="w-full h-full object-cover opacity-20"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020b16] via-[#020b16]/70 to-[#020b16]"></div>
+        </div>
+
+        <motion.div 
+          variants={containerRevealVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        >
           <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-              Veja o que nossos clientes estão dizendo
-            </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <motion.h2 variants={revealVariants} className="text-3xl md:text-5xl font-black mb-4 text-white uppercase tracking-tight">
+              Veja o que <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">nossos clientes</span> estão dizendo
+            </motion.h2>
+            <motion.p variants={revealVariants} className="text-gray-400 text-lg max-w-2xl mx-auto">
               Feedbacks reais de quem já usa nosso aplicativo todos os dias.
-            </p>
+            </motion.p>
           </div>
 
           {/* Feedback Card Stack */}
-          <div className="relative h-[560px] w-full max-w-[400px] mx-auto mb-2 perspective-1000">
+          <motion.div variants={revealVariants} className="relative h-[560px] w-full max-w-[400px] mx-auto mb-2 perspective-1000">
             <FeedbackStack items={feedbacks} />
-          </div>
+          </motion.div>
           
           {/* Swipe Instruction */}
           <div className="flex items-center justify-center gap-4 text-white/70 animate-pulse mb-16 relative z-20">
@@ -1374,41 +1473,75 @@ function App() {
           </div>
 
           <div className="mb-12"></div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* FAQ Carousel */}
-      <section id="duvidas" className="py-12 bg-[var(--color-brand-navy-dark)]">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 px-2">Perguntas Frequentes</h2>
-
-          <div className="flex overflow-x-auto gap-4 pb-8 pt-4 px-2 hide-scrollbar snap-x snap-mandatory">
-            <div className="min-w-[20rem] md:min-w-[25rem] snap-start">
-              <FAQItem 
-                question="Preciso de internet rápida?" 
-                answer="Recomendamos pelo menos 15 Mega para HD e 30 Mega para 4K. Nossa tecnologia P2P ajuda na estabilidade."
-              />
-            </div>
-            <div className="min-w-[20rem] md:min-w-[25rem] snap-start">
-              <FAQItem 
-                question="Como recebo o acesso?" 
-                answer="Após a confirmação, você receberá seus dados de acesso e tutorial diretamente no WhatsApp."
-              />
-            </div>
-            <div className="min-w-[20rem] md:min-w-[25rem] snap-start">
-              <FAQItem 
-                question="Posso testar antes de pagar?" 
-                answer="Sim! Oferecemos um teste gratuito de 1 hora para você conhecer nossa grade e qualidade."
-              />
-            </div>
-            <div className="min-w-[20rem] md:min-w-[25rem] snap-start">
-              <FAQItem 
-                question="Em quais aparelhos posso assistir?" 
-                answer="Compatível com Smart TVs, TV Box, Smartphones (Android/iOS), PC e Chromecast."
-              />
-            </div>
-          </div>
+      {/* FAQ Section */}
+      <section id="duvidas" className="py-24 bg-[var(--color-brand-navy-dark)] relative overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://i.imgur.com/oBdSA1U.jpeg" 
+            alt="Background" 
+            className="w-full h-full object-cover opacity-20"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-brand-navy-dark)] via-[var(--color-brand-navy-dark)]/80 to-[var(--color-brand-navy-dark)]"></div>
         </div>
+
+        {/* Background Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-[var(--color-brand-cyan)]/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <motion.div 
+          variants={containerRevealVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+        >
+          <div className="text-center mb-16">
+            <motion.h2 variants={revealVariants} className="text-3xl md:text-5xl font-black text-white mb-4 uppercase tracking-tight">
+              Perguntas <span className="text-[var(--color-brand-cyan)]">Frequentes</span>
+            </motion.h2>
+            <motion.p variants={revealVariants} className="text-gray-400 text-lg">Tire suas dúvidas sobre o melhor serviço de IPTV do Brasil.</motion.p>
+          </div>
+
+          <motion.div variants={revealVariants} className="space-y-4">
+            <FAQItem 
+              question="Preciso de internet rápida?" 
+              answer="Recomendamos pelo menos 15 Mega para HD e 30 Mega para 4K. Nossa tecnologia P2P ajuda na estabilidade e evita travamentos mesmo em conexões oscilantes."
+            />
+            <FAQItem 
+              question="Como recebo o acesso?" 
+              answer="Após a confirmação do pagamento, você receberá seus dados de acesso (usuário, senha e URL) e um tutorial passo a passo diretamente no seu WhatsApp em poucos minutos."
+            />
+            <FAQItem 
+              question="Posso testar antes de pagar?" 
+              answer="Com certeza! Oferecemos um teste gratuito para você conhecer nossa grade completa de canais, filmes e séries, além de testar a qualidade da nossa transmissão."
+            />
+            <FAQItem 
+              question="Em quais aparelhos posso assistir?" 
+              answer="Nosso serviço é compatível com Smart TVs (Samsung, LG, Android TV), TV Box, Smartphones (Android/iOS), Computadores, Notebooks, Tablets e Chromecast."
+            />
+            <FAQItem 
+              question="O serviço tem fidelidade ou contrato?" 
+              answer="Não! Nosso sistema é pré-pago. Você paga pelo período que deseja usar e pode cancelar ou renovar quando quiser, sem multas ou taxas escondidas."
+            />
+          </motion.div>
+
+          <motion.div variants={revealVariants} className="mt-12 text-center">
+            <p className="text-gray-400 mb-6 font-medium">Ainda tem alguma dúvida? Fale com nosso suporte agora mesmo!</p>
+            <a 
+              href={WHATSAPP_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-[#25D366] hover:bg-[#20ba5a] text-white font-black rounded-2xl shadow-[0_10px_30px_rgba(37,211,102,0.3)] transition-all active:scale-95 group"
+            >
+              <MessageCircle className="w-6 h-6 fill-white" />
+              FALAR COM SUPORTE NO WHATSAPP
+            </a>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Footer */}
@@ -1762,19 +1895,37 @@ function FAQItem({ question, answer }: { question: string, answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-[var(--color-brand-navy)] border border-white/5 rounded-md overflow-hidden transition-all duration-300 md:hover:border-[var(--color-brand-cyan)]/50 md:hover:scale-[1.02] active:scale-[0.98] h-full">
+    <div className="bg-[#0b1623] border border-white/10 rounded-2xl overflow-hidden transition-all duration-300 hover:border-[var(--color-brand-cyan)]/30 group">
       <button 
-        className="w-full px-6 py-5 flex justify-between items-center text-left"
+        className="w-full px-6 py-6 flex justify-between items-center text-left gap-4"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="font-semibold text-lg">{question}</span>
-        <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <div className="flex items-center gap-4">
+          <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-[var(--color-brand-cyan)] text-white shadow-[0_0_15px_rgba(67,175,239,0.5)]' : 'bg-white/5 text-gray-400 group-hover:bg-white/10'}`}>
+            <HelpCircle className="w-6 h-6" />
+          </div>
+          <span className={`font-bold text-lg md:text-xl transition-colors duration-300 ${isOpen ? 'text-[var(--color-brand-cyan)]' : 'text-white'}`}>{question}</span>
+        </div>
+        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-[var(--color-brand-cyan)]/20 text-[var(--color-brand-cyan)] rotate-180' : 'bg-white/5 text-gray-500'}`}>
+          <ChevronDown className="w-5 h-5" />
+        </div>
       </button>
-      <div 
-        className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-48 pb-5 opacity-100' : 'max-h-0 opacity-0'}`}
-      >
-        <p className="text-gray-400 leading-relaxed">{answer}</p>
-      </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            <div className="px-6 pb-6 pl-[4.5rem]">
+              <p className="text-gray-400 text-lg leading-relaxed border-l-2 border-[var(--color-brand-cyan)]/20 pl-6 py-2">
+                {answer}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
