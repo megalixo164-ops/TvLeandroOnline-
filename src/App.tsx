@@ -2,17 +2,13 @@ import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react';
 import { PricingCarousel } from './components/PricingCarousel';
 import { 
-  Tv, 
   Zap, 
   Film, 
   MonitorSmartphone, 
   Headset, 
-  Check, 
   ChevronDown, 
   MessageCircle,
   Smartphone,
-  Monitor,
-  Cast,
   Menu,
   X,
   Play,
@@ -29,11 +25,6 @@ import {
   ShoppingCart,
   Key,
   PlayCircle,
-  Award,
-  Users,
-  ShieldCheck,
-  Globe,
-  MonitorPlay,
   HelpCircle
 } from 'lucide-react';
 
@@ -331,48 +322,56 @@ const HowItWorksSection = () => {
     let lengthDesktop = initPath(pathDesktop);
     let lengthMobile = initPath(pathMobile);
 
+    let ticking = false;
+
     const handleScroll = () => {
-      const rect = container.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      
-      // Cálculo de progresso mais preciso baseado na viewport
-      const startTrigger = windowHeight * 0.8;
-      const endTrigger = windowHeight * 0.4;
-      const progressRange = rect.height + (startTrigger - endTrigger);
-      const currentPos = startTrigger - rect.top;
-      
-      let drawPercent = currentPos / progressRange;
-      drawPercent = Math.max(0, Math.min(1, drawPercent));
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const rect = container.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          
+          // Cálculo de progresso mais preciso baseado na viewport
+          const startTrigger = windowHeight * 0.8;
+          const endTrigger = windowHeight * 0.4;
+          const progressRange = rect.height + (startTrigger - endTrigger);
+          const currentPos = startTrigger - rect.top;
+          
+          let drawPercent = currentPos / progressRange;
+          drawPercent = Math.max(0, Math.min(1, drawPercent));
 
-      if (pathDesktop) {
-        pathDesktop.style.strokeDashoffset = `${lengthDesktop - (lengthDesktop * drawPercent)}`;
-      }
-      if (pathMobile) {
-        pathMobile.style.strokeDashoffset = `${lengthMobile - (lengthMobile * drawPercent)}`;
-      }
+          if (pathDesktop) {
+            pathDesktop.style.strokeDashoffset = `${lengthDesktop - (lengthDesktop * drawPercent)}`;
+          }
+          if (pathMobile) {
+            pathMobile.style.strokeDashoffset = `${lengthMobile - (lengthMobile * drawPercent)}`;
+          }
 
-      stepsRef.current.forEach((step, index) => {
-        if (!step) return;
-        // Thresholds recalibrados para os 4 passos
-        const threshold = index / (steps.length - 1);
-        if (drawPercent >= threshold * 0.85) { // Ativação levemente antecipada para fluidez
-          step.classList.add('opacity-100', 'scale-100', 'translate-y-0');
-          step.classList.remove('opacity-0', 'scale-75', 'translate-y-8');
-          const icon = step.querySelector('.step-icon');
-          if (icon) {
-            icon.classList.add('animate-pulse-glow');
-            icon.classList.replace('border-transparent', 'border-[#00CFFF]');
-          }
-        } else {
-          step.classList.remove('opacity-100', 'scale-100', 'translate-y-0');
-          step.classList.add('opacity-0', 'scale-75', 'translate-y-8');
-          const icon = step.querySelector('.step-icon');
-          if (icon) {
-            icon.classList.remove('animate-pulse-glow');
-            icon.classList.replace('border-[#00CFFF]', 'border-transparent');
-          }
-        }
-      });
+          stepsRef.current.forEach((step, index) => {
+            if (!step) return;
+            // Thresholds recalibrados para os 4 passos
+            const threshold = index / (steps.length - 1);
+            if (drawPercent >= threshold * 0.85) { // Ativação levemente antecipada para fluidez
+              step.classList.add('opacity-100', 'scale-100', 'translate-y-0');
+              step.classList.remove('opacity-0', 'scale-75', 'translate-y-8');
+              const icon = step.querySelector('.step-icon');
+              if (icon) {
+                icon.classList.add('animate-pulse-glow');
+                icon.classList.replace('border-transparent', 'border-[#00CFFF]');
+              }
+            } else {
+              step.classList.remove('opacity-100', 'scale-100', 'translate-y-0');
+              step.classList.add('opacity-0', 'scale-75', 'translate-y-8');
+              const icon = step.querySelector('.step-icon');
+              if (icon) {
+                icon.classList.remove('animate-pulse-glow');
+                icon.classList.replace('border-[#00CFFF]', 'border-transparent');
+              }
+            }
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -405,6 +404,7 @@ const HowItWorksSection = () => {
         <img 
           src="https://i.imgur.com/IGPMYNA.jpeg" 
           alt="Background" 
+          loading="lazy"
           className="w-full h-full object-cover opacity-20"
           referrerPolicy="no-referrer"
         />
@@ -579,7 +579,7 @@ function App() {
               {/* Close Button */}
               <button 
                 onClick={() => setIsLogoModalOpen(false)}
-                className="absolute top-6 right-8 z-20 text-white/50 hover:text-white transition-colors"
+                className="absolute top-6 right-8 z-20 p-3 -m-3 text-white/50 hover:text-white transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -719,7 +719,7 @@ function App() {
 
             {/* Mobile Menu Button */}
             <button 
-              className="md:hidden p-2 text-gray-300 hover:text-white transition-colors"
+              className="md:hidden p-3 -m-1 text-gray-300 hover:text-white transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
@@ -762,7 +762,7 @@ function App() {
                 </div>
                 <button 
                   onClick={() => setIsMenuOpen(false)}
-                  className="p-2 text-gray-300 hover:text-white transition-colors"
+                  className="p-3 -m-1 text-gray-300 hover:text-white transition-colors"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -995,6 +995,7 @@ function App() {
           <img 
             src="https://i.imgur.com/yGRqNnf.png" 
             alt="Background Texture" 
+            loading="lazy"
             className="w-full h-full object-cover opacity-40 mix-blend-overlay"
             referrerPolicy="no-referrer"
           />
@@ -1436,6 +1437,7 @@ function App() {
           <img 
             src="https://i.imgur.com/3mEeRXL.png" 
             alt="Background" 
+            loading="lazy"
             className="w-full h-full object-cover opacity-20"
             referrerPolicy="no-referrer"
           />
@@ -1483,6 +1485,7 @@ function App() {
           <img 
             src="https://i.imgur.com/oBdSA1U.jpeg" 
             alt="Background" 
+            loading="lazy"
             className="w-full h-full object-cover opacity-20"
             referrerPolicy="no-referrer"
           />
@@ -1553,6 +1556,7 @@ function App() {
               <img 
                 src="https://i.imgur.com/gB6o74h.jpeg" 
                 alt="Leandro TV+" 
+                loading="lazy"
                 className="h-14 w-14 object-cover rounded-full border-2 border-[var(--color-brand-cyan)]/30 shadow-[0_0_20px_rgba(67,175,239,0.2)]" 
                 referrerPolicy="no-referrer" 
               />
@@ -1609,6 +1613,7 @@ function App() {
                  <img 
                    src="https://i.imgur.com/uODMHHK.png" 
                    alt="IPTV Zero Travamentos" 
+                   loading="lazy"
                    className="w-full h-full object-cover"
                  />
                  <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent"></div>
@@ -1668,6 +1673,7 @@ function App() {
                  <img 
                    src="https://i.imgur.com/Y8Yy08G.png" 
                    alt="Lista IPTV Atualizada" 
+                   loading="lazy"
                    className="w-full h-full object-cover"
                  />
                  <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent"></div>
@@ -1727,6 +1733,7 @@ function App() {
                  <img 
                    src="https://i.imgur.com/BxYKbsn.png" 
                    alt="IPTV Multiplataforma" 
+                   loading="lazy"
                    className="w-full h-full object-cover"
                  />
                  <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent"></div>
@@ -1789,6 +1796,7 @@ function App() {
                  <img 
                    src="https://i.imgur.com/aJ3HnSA.png" 
                    alt="Suporte Premium" 
+                   loading="lazy"
                    className="w-full h-full object-cover"
                  />
                  <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent"></div>
@@ -1849,6 +1857,7 @@ function App() {
                  <img 
                    src="https://i.imgur.com/1ImclTN.png" 
                    alt="IPTV sem contrato" 
+                   loading="lazy"
                    className="w-full h-full object-cover"
                  />
                  <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent"></div>
