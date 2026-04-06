@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react';
 import { PricingCarousel } from './components/PricingCarousel';
+import { trackPixelEvent } from './lib/tracking';
 import { 
   Zap, 
   Film, 
@@ -31,12 +32,6 @@ import {
 const WHATSAPP_NUMBER = "5547992733349";
 const WHATSAPP_TEXT = "Olá, gostaria do meu primeiro acesso grátis à Leandro TV+";
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_TEXT)}`;
-
-const trackPixelEvent = (eventName: string, params?: object) => {
-  if (typeof window !== 'undefined' && (window as any).fbq) {
-    (window as any).fbq('track', eventName, params);
-  }
-};
 
 const revealVariants = {
   hidden: { opacity: 0, y: 40 },
