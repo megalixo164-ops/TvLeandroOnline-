@@ -38,7 +38,7 @@ import {
 } from 'lucide-react';
 
 const WHATSAPP_NUMBER = "5547992733349";
-const WHATSAPP_TEXT = "Olá, quero meu teste grátis na Leandro TV+";
+const WHATSAPP_TEXT = "Olá, gostaria do meu primeiro acesso grátis à Leandro TV+";
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_TEXT)}`;
 
 const revealVariants = {
@@ -1545,29 +1545,37 @@ function App() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#000000] pt-16 pb-8 border-t border-white/5">
+      <footer className="bg-[#000000] pt-12 pb-6 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col items-center text-center gap-8 mb-10">
+            {/* Logo and Brand */}
+            <div className="flex flex-col items-center gap-3">
               <img 
                 src="https://i.imgur.com/gB6o74h.jpeg" 
                 alt="Leandro TV+" 
-                className="h-12 w-12 object-cover rounded-full opacity-80 hover:opacity-100 transition-all duration-300 border border-white/10" 
+                className="h-14 w-14 object-cover rounded-full border-2 border-[var(--color-brand-cyan)]/30 shadow-[0_0_20px_rgba(67,175,239,0.2)]" 
                 referrerPolicy="no-referrer" 
               />
+              <span className="text-xl font-black text-white tracking-tighter">
+                LEANDRO <span className="text-[var(--color-brand-cyan)]">TV+</span>
+              </span>
             </div>
-            <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center w-full md:w-auto">
-              <a href="#inicio" className="text-gray-400 hover:text-white transition-colors py-2 px-4 md:p-0 text-lg md:text-base">Início</a>
-              <a href="#planos" className="text-gray-400 hover:text-white transition-colors py-2 px-4 md:p-0 text-lg md:text-base">Planos</a>
-              <a href="#duvidas" className="text-gray-400 hover:text-white transition-colors py-2 px-4 md:p-0 text-lg md:text-base">Dúvidas</a>
-            </div>
+
+            {/* Navigation Links */}
+            <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+              <a href="#inicio" className="text-gray-400 hover:text-[var(--color-brand-cyan)] transition-colors font-bold uppercase tracking-widest text-[10px]">Início</a>
+              <a href="#como-funciona" className="text-gray-400 hover:text-[var(--color-brand-cyan)] transition-colors font-bold uppercase tracking-widest text-[10px]">Como Funciona</a>
+              <a href="#planos" className="text-gray-400 hover:text-[var(--color-brand-cyan)] transition-colors font-bold uppercase tracking-widest text-[10px]">Planos</a>
+              <a href="#depoimentos" className="text-gray-400 hover:text-[var(--color-brand-cyan)] transition-colors font-bold uppercase tracking-widest text-[10px]">Depoimentos</a>
+              <a href="#duvidas" className="text-gray-400 hover:text-[var(--color-brand-cyan)] transition-colors font-bold uppercase tracking-widest text-[10px]">Dúvidas</a>
+            </nav>
           </div>
           
-          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-gray-500">
+          <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
             <p className="text-center md:text-left">© 2026 Leandro TV+ - Todos os direitos reservados.</p>
-            <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-center">
-              <a href="#" className="hover:text-gray-300 transition-colors py-2">Termos de Uso</a>
-              <a href="#" className="hover:text-gray-300 transition-colors py-2">Política de Privacidade</a>
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-white transition-colors">Termos</a>
+              <a href="#" className="hover:text-white transition-colors">Privacidade</a>
             </div>
           </div>
         </div>
