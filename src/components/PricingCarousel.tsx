@@ -115,6 +115,15 @@ export function PricingCarousel({ whatsappLink }: PricingCarouselProps) {
               href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => {
+                if (typeof window !== 'undefined' && (window as any).fbq) {
+                  (window as any).fbq('track', 'InitiateCheckout', {
+                    content_name: 'Plano Mensal',
+                    value: 29.90,
+                    currency: 'BRL'
+                  });
+                }
+              }}
               className="
                 w-full block text-center py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-lg md:text-xl 
                 bg-gradient-to-r from-[#008F4C] to-[#00FF7F] 

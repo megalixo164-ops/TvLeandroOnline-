@@ -32,6 +32,12 @@ const WHATSAPP_NUMBER = "5547992733349";
 const WHATSAPP_TEXT = "Olá, gostaria do meu primeiro acesso grátis à Leandro TV+";
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_TEXT)}`;
 
+const trackPixelEvent = (eventName: string, params?: object) => {
+  if (typeof window !== 'undefined' && (window as any).fbq) {
+    (window as any).fbq('track', eventName, params);
+  }
+};
+
 const revealVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: { 
@@ -835,6 +841,7 @@ function App() {
                 href={WHATSAPP_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackPixelEvent('Contact', { content_name: 'Hero Assinar Agora' })}
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#008F4C] to-[#00FF7F] text-white px-8 py-4 rounded-full font-bold text-xl transition-all shadow-[0_0_20px_rgba(0,255,127,0.3)] hover:shadow-[0_0_30px_rgba(0,255,127,0.6)] transform hover:scale-105 w-full sm:w-auto"
               >
                 <Play className="w-6 h-6 fill-current" />
@@ -842,6 +849,7 @@ function App() {
               </a>
               <a 
                 href="#planos"
+                onClick={() => trackPixelEvent('ViewContent', { content_name: 'Hero Ver Planos' })}
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#0062E6] to-[#33AEFF] hover:brightness-110 text-white px-8 py-4 rounded-full font-bold text-xl transition-all backdrop-blur-sm border border-white/20 transform hover:scale-105 w-full sm:w-auto shadow-[0_0_20px_rgba(0,98,230,0.3)] hover:shadow-[0_0_30px_rgba(0,98,230,0.6)]"
               >
                 <Info className="w-6 h-6" />
@@ -1380,6 +1388,7 @@ function App() {
               target="_blank"
               rel="noopener noreferrer"
               variants={revealVariants}
+              onClick={() => trackPixelEvent('Contact', { content_name: 'Seção Games Quero Assistir' })}
               className="inline-flex items-center gap-2 bg-[var(--color-brand-cyan)] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-[#020b16] transition-all duration-300 shadow-[0_0_20px_rgba(67,175,239,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)] hover:scale-105"
             >
               Quero assistir agora
@@ -1538,6 +1547,7 @@ function App() {
               href={WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackPixelEvent('Contact', { content_name: 'FAQ Suporte' })}
               className="inline-flex items-center gap-3 px-8 py-4 bg-[#25D366] hover:bg-[#20ba5a] text-white font-black rounded-2xl shadow-[0_10px_30px_rgba(37,211,102,0.3)] transition-all active:scale-95 group"
             >
               <MessageCircle className="w-6 h-6 fill-white" />
@@ -1894,6 +1904,7 @@ function App() {
         href={WHATSAPP_LINK}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackPixelEvent('Contact', { content_name: 'Floating WhatsApp' })}
         className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:bg-[#128C7E] transition-colors flex items-center justify-center animate-pulse-slow group"
         aria-label="Fale conosco no WhatsApp"
       >
