@@ -194,12 +194,9 @@ const FeedbackCard = memo(({ feedback, index, total, onSwipe, depth }: any) => {
           <div className="flex items-center gap-3">
             <ArrowLeft size={22} className="text-[#8696a0]" />
             <div className="relative">
-              <img 
-                src={feedback.avatar} 
-                alt={feedback.name} 
-                className="w-11 h-11 rounded-full object-cover border-2 border-white/5"
-                referrerPolicy="no-referrer"
-              />
+              <div className="w-11 h-11 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold border-2 border-white/5">
+                {feedback.name.charAt(0)}
+              </div>
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#00a884] border-2 border-[#202c33] rounded-full"></div>
             </div>
             <div className="flex flex-col">
@@ -216,8 +213,8 @@ const FeedbackCard = memo(({ feedback, index, total, onSwipe, depth }: any) => {
 
         {/* Chat Area */}
         <div className="bg-[#0b141a] flex-1 p-5 flex flex-col relative overflow-hidden">
-          {/* Background Pattern Overlay */}
-          <div className="absolute inset-0 opacity-[0.08] bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-repeat pointer-events-none"></div>
+          {/* Background Pattern Overlay removed */}
+          <div className="absolute inset-0 opacity-[0.08] bg-[#0b141a] pointer-events-none"></div>
           
           <div className="relative z-10 flex flex-col gap-6">
             <div className="flex justify-center">
@@ -400,15 +397,8 @@ const HowItWorksSection = () => {
 
   return (
     <section id="como-funciona" className="relative w-full bg-[#020b16] py-12 overflow-hidden">
-      {/* Background Image with Overlay */}
+      {/* Background Overlay removed */}
       <div className="absolute inset-0 z-0">
-        <img 
-          src="https://i.imgur.com/IGPMYNA.jpeg" 
-          alt="Background" 
-          loading="lazy"
-          className="w-full h-full object-cover opacity-20"
-          referrerPolicy="no-referrer"
-        />
         <div className="absolute inset-0 bg-gradient-to-b from-[#020b16] via-[#020b16]/60 to-[#020b16]"></div>
       </div>
 
@@ -497,7 +487,6 @@ function App() {
       id: 'zero-travamentos',
       title: 'IPTV Zero Travamentos',
       desc: 'Clique para ver detalhes da nossa infraestrutura.',
-      image: 'https://i.imgur.com/uODMHHK.png',
       icon: Rocket,
       action: () => setIsFeatureModalOpen(true)
     },
@@ -505,7 +494,6 @@ function App() {
       id: 'catalogo',
       title: 'Lista IPTV Atualizada',
       desc: 'Clique para ver detalhes sobre nosso acervo.',
-      image: 'https://i.imgur.com/Y8Yy08G.png',
       icon: Film,
       action: () => setIsCatalogModalOpen(true)
     },
@@ -513,7 +501,6 @@ function App() {
       id: 'multiplataforma',
       title: 'IPTV Multiplataforma',
       desc: 'Clique para ver detalhes sobre compatibilidade.',
-      image: 'https://i.imgur.com/BxYKbsn.png',
       icon: MonitorSmartphone,
       action: () => setIsMultiplatformModalOpen(true)
     },
@@ -521,7 +508,6 @@ function App() {
       id: 'suporte',
       title: 'Suporte Premium',
       desc: 'Clique para falar com nosso suporte.',
-      image: 'https://i.imgur.com/aJ3HnSA.png',
       icon: Headset,
       action: () => setIsSupportModalOpen(true)
     },
@@ -529,7 +515,6 @@ function App() {
       id: 'contrato',
       title: 'IPTV sem contrato',
       desc: 'Clique para saber mais sobre nossa política sem fidelidade.',
-      image: 'https://i.imgur.com/1ImclTN.png',
       icon: Unlock,
       action: () => setIsContractModalOpen(true)
     }
@@ -592,13 +577,8 @@ function App() {
                   <div className="absolute -inset-4 bg-blue-500/20 blur-3xl rounded-full opacity-70 group-hover:opacity-100 transition-opacity duration-700 animate-pulse"></div>
                   <div className="absolute -inset-1 bg-gradient-to-r from-blue-400/30 to-cyan-400/30 blur-md rounded-full"></div>
                   
-                  <div className="relative h-24 w-24 rounded-full border-2 border-blue-400/40 p-1.5 bg-blue-950/40 backdrop-blur-xl shadow-2xl overflow-hidden">
-                    <img 
-                      src="https://i.imgur.com/gB6o74h.jpeg" 
-                      alt="Leandro TV+" 
-                      className="h-full w-full object-cover rounded-full"
-                      referrerPolicy="no-referrer"
-                    />
+                  <div className="relative h-24 w-24 rounded-full border-2 border-blue-400/40 p-1.5 bg-blue-950/40 backdrop-blur-xl shadow-2xl flex items-center justify-center">
+                    <Zap className="w-12 h-12 text-blue-400" />
                   </div>
                   
                   {/* Floating Label */}
@@ -696,12 +676,9 @@ function App() {
               <div className="relative">
                 {/* Subtle blue border glow */}
                 <div className="absolute -inset-1 bg-blue-500/40 blur-md rounded-full opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <img 
-                  src="https://i.imgur.com/gB6o74h.jpeg" 
-                  alt="Leandro TV+" 
-                  className="relative h-14 w-14 object-cover rounded-full border-2 border-blue-400/50 brightness-110 contrast-110 shadow-[0_0_15px_rgba(67,175,239,0.3)]" 
-                  referrerPolicy="no-referrer" 
-                />
+                <div className="relative h-14 w-14 bg-blue-950/40 backdrop-blur-xl rounded-full border-2 border-blue-400/50 flex items-center justify-center shadow-[0_0_15px_rgba(67,175,239,0.3)]">
+                  <span className="text-blue-400 font-black text-xl">L</span>
+                </div>
               </div>
               <span className="text-2xl font-black tracking-tighter text-white hidden sm:block">
                 Leandro TV+
@@ -753,12 +730,9 @@ function App() {
               {/* Sidebar Header */}
               <div className="p-6 flex justify-between items-center border-b border-blue-400/10">
                 <div className="flex items-center gap-3">
-                  <img 
-                    src="https://i.imgur.com/gB6o74h.jpeg" 
-                    alt="Logo" 
-                    className="h-10 w-10 rounded-full border border-blue-400/30"
-                    referrerPolicy="no-referrer"
-                  />
+                  <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold border border-blue-400/30">
+                    L
+                  </div>
                   <span className="text-lg font-bold text-white tracking-tight">Leandro TV+</span>
                 </div>
                 <button 
@@ -808,15 +782,8 @@ function App() {
         )}
       </AnimatePresence>
       <section id="inicio" className="relative min-h-fit md:h-[90vh] md:min-h-[600px] w-full flex items-center pt-24 pb-8 md:py-0">
-        {/* Background Image with Cinematic Overlay */}
+        {/* Background Overlay removed */}
         <div className="absolute inset-0 z-0 overflow-hidden">
-          <img 
-            src="https://i.imgur.com/aBGT6rF.png" 
-            alt="TV Streaming Background" 
-            className="w-full h-full object-cover blur-[3px]"
-            referrerPolicy="no-referrer"
-          />
-          {/* Netflix-style cinematic gradients */}
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-brand-navy-dark)] via-[var(--color-brand-navy-dark)]/60 to-transparent w-[80%]"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-brand-navy-dark)] via-transparent to-black/40"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--color-brand-navy-dark)]"></div>
@@ -855,153 +822,10 @@ function App() {
         </div>
       </section>
 
-      {/* Infinite Series Carousel */}
-      <div className="relative z-30 w-full overflow-hidden mt-0 md:-mt-24 mb-8 md:mb-12">
-        <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[var(--color-brand-navy-dark)] via-transparent to-[var(--color-brand-navy-dark)]"></div>
-        <motion.div 
-          className="flex gap-6 w-max px-4"
-          animate={{ x: "-50%" }}
-          transition={{ 
-            duration: 45, 
-            ease: "linear", 
-            repeat: Infinity 
-          }}
-        >
-          {[...Array(2)].map((_, groupIndex) => (
-            <div key={`series-group-${groupIndex}`} className="flex gap-6">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div 
-                  key={`series-card-${groupIndex}-${i}`} 
-                  className="w-48 h-72 md:w-64 md:h-96 bg-[#0b1623] rounded-xl border border-white/10 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl group"
-                >
-                  {/* Background Image for F1 */}
-                  {i === 0 && (
-                    <img 
-                      src="https://i.imgur.com/7JZNh7G.png" 
-                      alt="Destaque F1" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for F2 */}
-                  {i === 1 && (
-                    <img 
-                      src="https://i.imgur.com/VH7Qpl9.png" 
-                      alt="Destaque F2" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for F3 */}
-                  {i === 2 && (
-                    <img 
-                      src="https://i.imgur.com/0KpC37M.png" 
-                      alt="Destaque F3" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for F4 */}
-                  {i === 3 && (
-                    <img 
-                      src="https://i.imgur.com/dEUiYbZ.png" 
-                      alt="Destaque F4" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for F5 */}
-                  {i === 4 && (
-                    <img 
-                      src="https://i.imgur.com/NSetzHI.png" 
-                      alt="Destaque F5" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for F6 */}
-                  {i === 5 && (
-                    <img 
-                      src="https://i.imgur.com/oyTs1Hp.png" 
-                      alt="Destaque F6" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for F7 */}
-                  {i === 6 && (
-                    <img 
-                      src="https://i.imgur.com/gTwbLGn.png" 
-                      alt="Destaque F7" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for F8 */}
-                  {i === 7 && (
-                    <img 
-                      src="https://i.imgur.com/nWPbzK1.png" 
-                      alt="Destaque F8" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for F9 */}
-                  {i === 8 && (
-                    <img 
-                      src="https://i.imgur.com/xU5wDHG.jpeg" 
-                      alt="Destaque F9" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for F10 */}
-                  {i === 9 && (
-                    <img 
-                      src="https://i.imgur.com/0WIYgQ1.png" 
-                      alt="Destaque F10" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-
-
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50 z-10"></div>
-                  
-                  {/* Placeholder Number Removed */}
-                  
-                  {/* Label Removed */}
-
-                  {/* Hover Effect Overlay */}
-                  <div className="absolute inset-0 bg-[var(--color-brand-cyan)]/0 group-hover:bg-[var(--color-brand-cyan)]/10 transition-colors duration-300 z-30"></div>
-                </div>
-              ))}
-            </div>
-          ))}
-        </motion.div>
-      </div>
-
       {/* Features Carousel */}
       <section id="recursos" className="pt-12 pb-10 relative z-20 mt-0 md:-mt-20">
-        {/* Background Image with Overlay */}
+        {/* Background Overlay removed */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <img 
-            src="https://i.imgur.com/yGRqNnf.png" 
-            alt="Background Texture" 
-            loading="lazy"
-            className="w-full h-full object-cover opacity-40 mix-blend-overlay"
-            referrerPolicy="no-referrer"
-          />
           <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-brand-navy-dark)] via-[var(--color-brand-navy-dark)]/80 to-[var(--color-brand-navy-dark)]"></div>
         </div>
 
@@ -1065,294 +889,12 @@ function App() {
         </motion.div>
       </section>
 
-      {/* Infinite Movie Carousel */}
-      <div className="relative z-30 w-full overflow-hidden my-4">
-        <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[var(--color-brand-navy-dark)] via-transparent to-[var(--color-brand-navy-dark)]"></div>
-        <motion.div 
-          className="flex gap-6 w-max px-4"
-          animate={{ x: "-50%" }}
-          transition={{ 
-            duration: 40, 
-            ease: "linear", 
-            repeat: Infinity 
-          }}
-        >
-          {[...Array(2)].map((_, groupIndex) => (
-            <div key={`movie-group-${groupIndex}`} className="flex gap-6">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div 
-                  key={`movie-card-${groupIndex}-${i}`} 
-                  className="w-56 h-80 md:w-80 md:h-[480px] bg-[#0b1623] rounded-xl border border-white/10 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl group"
-                >
-                  {/* Background Image for S1 */}
-                  {i === 0 && (
-                    <img 
-                      src="https://i.imgur.com/7MmpsfG.png" 
-                      alt="Destaque S1" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for S2 */}
-                  {i === 1 && (
-                    <img 
-                      src="https://i.imgur.com/oerxMu6.jpeg" 
-                      alt="Destaque S2" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for S3 */}
-                  {i === 2 && (
-                    <img 
-                      src="https://i.imgur.com/IJ2pkLV.jpeg" 
-                      alt="Destaque S3" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for S4 */}
-                  {i === 3 && (
-                    <img 
-                      src="https://i.imgur.com/XuXjqYE.png" 
-                      alt="Destaque S4" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for S5 */}
-                  {i === 4 && (
-                    <img 
-                      src="https://i.imgur.com/T9E0DzN.png" 
-                      alt="Destaque S5" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for S6 */}
-                  {i === 5 && (
-                    <img 
-                      src="https://i.imgur.com/3BMbhlV.png" 
-                      alt="Destaque S6" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for S7 */}
-                  {i === 6 && (
-                    <img 
-                      src="https://i.imgur.com/NwfOuJt.jpeg" 
-                      alt="Destaque S7" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for S8 */}
-                  {i === 7 && (
-                    <img 
-                      src="https://i.imgur.com/QLssNnn.png" 
-                      alt="Destaque S8" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for S9 */}
-                  {i === 8 && (
-                    <img 
-                      src="https://i.imgur.com/SSC0qZ9.png" 
-                      alt="Destaque S9" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  {/* Background Image for S10 */}
-                  {i === 9 && (
-                    <img 
-                      src="https://i.imgur.com/u0fj70v.png" 
-                      alt="Destaque S10" 
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
-
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50 z-10"></div>
-                  
-                  {/* Placeholder Number Removed */}
-                  
-                  {/* Label Removed */}
-
-                  {/* Hover Effect Overlay */}
-                  <div className="absolute inset-0 bg-[var(--color-brand-cyan)]/0 group-hover:bg-[var(--color-brand-cyan)]/10 transition-colors duration-300 z-30"></div>
-                </div>
-              ))}
-            </div>
-          ))}
-        </motion.div>
-      </div>
-
       <HowItWorksSection />
-
-      {/* Channels Section */}
-      <section className="py-16 border-y border-white/5 bg-[#030f1c] relative z-20 overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://i.imgur.com/Ja1oHN4.png" 
-            alt="Background" 
-            className="w-full h-full object-cover blur-[4px] opacity-30"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-[#030f1c]/80"></div>
-        </div>
-
-        <motion.div 
-          variants={containerRevealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-        >
-          {/* Channels Section Content */}
-          <motion.div variants={revealVariants} className="text-center mb-12">
-             <h2 className="text-xl md:text-2xl font-bold text-white uppercase tracking-wide">
-               Tenha acesso a todos os <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Canais e plataformas streaming</span> do Brasil
-             </h2>
-          </motion.div>
-        </motion.div>
-
-        {/* Carousel */}
-        <div className="relative w-full overflow-hidden">
-          <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#030f1c] via-transparent to-[#030f1c]"></div>
-          <motion.div 
-            className="flex gap-8 w-max px-4"
-            animate={{ x: "-50%" }}
-            transition={{ 
-              duration: 40, 
-              ease: "linear", 
-              repeat: Infinity 
-            }}
-          >
-            {[...Array(2)].map((_, groupIndex) => (
-              <div key={`channel-group-${groupIndex}`} className="flex gap-8">
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <div 
-                    key={`channel-card-${groupIndex}-${i}`} 
-                    className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#0b1623] border-2 border-white/10 flex items-center justify-center relative overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)] group hover:border-[var(--color-brand-cyan)] transition-all duration-300 hover:scale-110 cursor-pointer"
-                  >
-                    {i === 0 ? (
-                      <img 
-                        src="https://i.imgur.com/pvKExUA.png" 
-                        alt="Logo 1" 
-                        className="absolute inset-0 w-full h-full object-cover scale-125" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : i === 1 ? (
-                      <img 
-                        src="https://i.imgur.com/EuuOVnC.jpeg" 
-                        alt="Logo 2" 
-                        className="absolute inset-0 w-full h-full object-cover scale-125" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : i === 2 ? (
-                      <img 
-                        src="https://i.imgur.com/DA0kSNX.png" 
-                        alt="Logo 3" 
-                        className="absolute inset-0 w-full h-full object-cover scale-125" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : i === 3 ? (
-                      <img 
-                        src="https://i.imgur.com/G5nGQ5B.png" 
-                        alt="Logo 4" 
-                        className="absolute inset-0 w-full h-full object-cover scale-125" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : i === 4 ? (
-                      <img 
-                        src="https://i.imgur.com/ch1MU63.png" 
-                        alt="Logo 5" 
-                        className="absolute inset-0 w-full h-full object-cover scale-125" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : i === 5 ? (
-                      <img 
-                        src="https://i.imgur.com/ZqOjxMV.png" 
-                        alt="Logo 6" 
-                        className="absolute inset-0 w-full h-full object-cover scale-125" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : i === 6 ? (
-                      <img 
-                        src="https://i.imgur.com/lEZT3yO.png" 
-                        alt="Logo 7" 
-                        className="absolute inset-0 w-full h-full object-cover scale-125" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : i === 7 ? (
-                      <img 
-                        src="https://i.imgur.com/ttQ82fK.png" 
-                        alt="Logo 8" 
-                        className="absolute inset-0 w-full h-full object-cover scale-125" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : i === 8 ? (
-                      <img 
-                        src="https://i.imgur.com/JRkrceA.png" 
-                        alt="Logo 9" 
-                        className="absolute inset-0 w-full h-full object-cover scale-125" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : i === 9 ? (
-                      <img 
-                        src="https://i.imgur.com/ufhwNoh.png" 
-                        alt="Logo 10" 
-                        className="absolute inset-0 w-full h-full object-cover scale-125" 
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : (
-                      <>
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50"></div>
-                        
-                        {/* Placeholder Number */}
-                        <span className="text-4xl md:text-5xl font-black text-white/20 group-hover:text-white/40 transition-colors duration-300 z-10">
-                          {i + 1}
-                        </span>
-                      </>
-                    )}
-                    
-                    {/* Image Placeholder Overlay (User will replace background) */}
-                    <div className={`absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors ${(i === 0 || i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9) ? 'hidden' : ''}`}></div>
-
-                    {/* Glow Effect */}
-                    <div className="absolute inset-0 rounded-full shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] group-hover:shadow-[inset_0_0_20px_rgba(67,175,239,0.3)] transition-all duration-300"></div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
 
       {/* Games Access Section */}
       <section className="relative py-16 md:py-32 overflow-hidden">
-        {/* Background Image */}
+        {/* Background Overlay removed */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://i.imgur.com/4VVJdN0.jpeg" 
-            alt="Esportes e Jogos" 
-            className="w-full h-full object-cover blur-[2px] brightness-50"
-            referrerPolicy="no-referrer"
-          />
-          {/* Gradient Overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#020b16] via-[#020b16]/80 to-transparent"></div>
         </div>
 
@@ -1394,14 +936,8 @@ function App() {
 
       {/* Pricing Section */}
       <section id="planos" className="pt-12 md:pt-16 pb-4 md:pb-8 relative overflow-hidden bg-[#020b16]">
-        {/* Background Image with Overlay */}
+        {/* Background Overlay removed */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://i.imgur.com/qvz7c99.png" 
-            alt="Background" 
-            className="w-full h-full object-cover opacity-30"
-            referrerPolicy="no-referrer"
-          />
           <div className="absolute inset-0 bg-gradient-to-b from-[#020b16] via-[#020b16]/80 to-[#020b16]"></div>
         </div>
 
@@ -1436,15 +972,8 @@ function App() {
 
       {/* Customer Feedback Section */}
       <section id="feedbacks" className="py-12 md:py-16 bg-[#020b16] border-y border-white/5 relative overflow-hidden">
-        {/* Background Image with Overlay */}
+        {/* Background Overlay removed */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://i.imgur.com/3mEeRXL.png" 
-            alt="Background" 
-            loading="lazy"
-            className="w-full h-full object-cover opacity-20"
-            referrerPolicy="no-referrer"
-          />
           <div className="absolute inset-0 bg-gradient-to-b from-[#020b16] via-[#020b16]/70 to-[#020b16]"></div>
         </div>
 
@@ -1484,15 +1013,8 @@ function App() {
 
       {/* FAQ Section */}
       <section id="duvidas" className="py-24 bg-[var(--color-brand-navy-dark)] relative overflow-hidden">
-        {/* Background Image with Overlay */}
+        {/* Background Overlay removed */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://i.imgur.com/oBdSA1U.jpeg" 
-            alt="Background" 
-            loading="lazy"
-            className="w-full h-full object-cover opacity-20"
-            referrerPolicy="no-referrer"
-          />
           <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-brand-navy-dark)] via-[var(--color-brand-navy-dark)]/80 to-[var(--color-brand-navy-dark)]"></div>
         </div>
 
@@ -1558,13 +1080,9 @@ function App() {
           <div className="flex flex-col items-center text-center gap-8 mb-10">
             {/* Logo and Brand */}
             <div className="flex flex-col items-center gap-3">
-              <img 
-                src="https://i.imgur.com/gB6o74h.jpeg" 
-                alt="Leandro TV+" 
-                loading="lazy"
-                className="h-14 w-14 object-cover rounded-full border-2 border-[var(--color-brand-cyan)]/30 shadow-[0_0_20px_rgba(67,175,239,0.2)]" 
-                referrerPolicy="no-referrer" 
-              />
+              <div className="h-14 w-14 bg-blue-950/40 backdrop-blur-xl rounded-full border-2 border-[var(--color-brand-cyan)]/30 flex items-center justify-center shadow-[0_0_20px_rgba(67,175,239,0.2)]">
+                <span className="text-[var(--color-brand-cyan)] font-black text-xl">L</span>
+              </div>
               <span className="text-xl font-black text-white tracking-tighter">
                 LEANDRO <span className="text-[var(--color-brand-cyan)]">TV+</span>
               </span>
@@ -1614,19 +1132,9 @@ function App() {
                 <X className="w-6 h-6" />
               </button>
               
-              <div className="relative h-64 w-full">
-                 <img 
-                   src="https://i.imgur.com/uODMHHK.png" 
-                   alt="IPTV Zero Travamentos" 
-                   loading="lazy"
-                   className="w-full h-full object-cover"
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent"></div>
-                 
-                 <div className="absolute bottom-4 left-8 flex items-center gap-3">
-                    <div className="p-3 rounded-xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30">
-                      <Rocket className="w-8 h-8 text-[var(--color-brand-cyan)]" />
-                    </div>
+              <div className="relative h-48 w-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center border-b border-white/10">
+                 <div className="p-5 rounded-2xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30 shadow-[0_0_30px_rgba(67,175,239,0.2)]">
+                   <Rocket className="w-12 h-12 text-[var(--color-brand-cyan)]" />
                  </div>
               </div>
 
@@ -1674,19 +1182,9 @@ function App() {
                 <X className="w-6 h-6" />
               </button>
               
-              <div className="relative h-64 w-full">
-                 <img 
-                   src="https://i.imgur.com/Y8Yy08G.png" 
-                   alt="Lista IPTV Atualizada" 
-                   loading="lazy"
-                   className="w-full h-full object-cover"
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent"></div>
-                 
-                 <div className="absolute bottom-4 left-8 flex items-center gap-3">
-                    <div className="p-3 rounded-xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30">
-                      <Film className="w-8 h-8 text-[var(--color-brand-cyan)]" />
-                    </div>
+              <div className="relative h-48 w-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center border-b border-white/10">
+                 <div className="p-5 rounded-2xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30 shadow-[0_0_30px_rgba(67,175,239,0.2)]">
+                   <Film className="w-12 h-12 text-[var(--color-brand-cyan)]" />
                  </div>
               </div>
 
@@ -1734,19 +1232,9 @@ function App() {
                 <X className="w-6 h-6" />
               </button>
               
-              <div className="relative h-64 w-full">
-                 <img 
-                   src="https://i.imgur.com/BxYKbsn.png" 
-                   alt="IPTV Multiplataforma" 
-                   loading="lazy"
-                   className="w-full h-full object-cover"
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent"></div>
-                 
-                 <div className="absolute bottom-4 left-8 flex items-center gap-3">
-                    <div className="p-3 rounded-xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30">
-                      <MonitorSmartphone className="w-8 h-8 text-[var(--color-brand-cyan)]" />
-                    </div>
+              <div className="relative h-48 w-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center border-b border-white/10">
+                 <div className="p-5 rounded-2xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30 shadow-[0_0_30px_rgba(67,175,239,0.2)]">
+                   <MonitorSmartphone className="w-12 h-12 text-[var(--color-brand-cyan)]" />
                  </div>
               </div>
 
@@ -1797,19 +1285,9 @@ function App() {
                 <X className="w-6 h-6" />
               </button>
               
-              <div className="relative h-64 w-full">
-                 <img 
-                   src="https://i.imgur.com/aJ3HnSA.png" 
-                   alt="Suporte Premium" 
-                   loading="lazy"
-                   className="w-full h-full object-cover"
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent"></div>
-                 
-                 <div className="absolute bottom-4 left-8 flex items-center gap-3">
-                    <div className="p-3 rounded-xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30">
-                      <Headset className="w-8 h-8 text-[var(--color-brand-cyan)]" />
-                    </div>
+              <div className="relative h-48 w-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center border-b border-white/10">
+                 <div className="p-5 rounded-2xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30 shadow-[0_0_30px_rgba(67,175,239,0.2)]">
+                   <Headset className="w-12 h-12 text-[var(--color-brand-cyan)]" />
                  </div>
               </div>
 
@@ -1858,19 +1336,9 @@ function App() {
                 <X className="w-6 h-6" />
               </button>
               
-              <div className="relative h-64 w-full">
-                 <img 
-                   src="https://i.imgur.com/1ImclTN.png" 
-                   alt="IPTV sem contrato" 
-                   loading="lazy"
-                   className="w-full h-full object-cover"
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent"></div>
-                 
-                 <div className="absolute bottom-4 left-8 flex items-center gap-3">
-                    <div className="p-3 rounded-xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30">
-                      <Unlock className="w-8 h-8 text-[var(--color-brand-cyan)]" />
-                    </div>
+              <div className="relative h-48 w-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center border-b border-white/10">
+                 <div className="p-5 rounded-2xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30 shadow-[0_0_30px_rgba(67,175,239,0.2)]">
+                   <Unlock className="w-12 h-12 text-[var(--color-brand-cyan)]" />
                  </div>
               </div>
 
