@@ -1,1424 +1,426 @@
-import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
-import { AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react';
-import { PricingCarousel } from './components/PricingCarousel';
-import { trackPixelEvent } from './lib/tracking';
+import React, { useState } from 'react';
 import { 
-  Zap, 
-  Film, 
+  Play, 
+  MessageCircle, 
+  CheckCircle2, 
   MonitorSmartphone, 
+  Zap, 
   Headset, 
+  ShieldCheck, 
+  Tv, 
+  Smartphone, 
+  Laptop, 
   ChevronDown, 
-  MessageCircle,
-  Smartphone,
-  Menu,
-  X,
-  Play,
-  Info,
-  Rocket,
-  Unlock,
-  ChevronLeft,
-  ChevronRight,
-  CheckCheck,
-  ArrowLeft,
-  Video,
-  Phone,
-  MoreVertical,
-  ShoppingCart,
-  Key,
-  PlayCircle,
-  HelpCircle
+  Star,
+  Check,
+  ChevronRight
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { trackPixelEvent } from './lib/tracking';
 
 const WHATSAPP_NUMBER = "5547992733349";
 const WHATSAPP_TEXT = "Olá, gostaria do meu primeiro acesso grátis à Leandro TV+";
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_TEXT)}`;
 
-const revealVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.8, ease: [0.21, 1.02, 0.47, 0.98] }
-  }
-};
-
-const containerRevealVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.1
-    }
-  }
-};
-
-interface Feedback {
-  id: number;
-  name: string;
-  avatar: string;
-  clientMsg: string;
-  clientTime: string;
-  supportMsg: string;
-  supportTime: string;
-}
-
-const feedbacks: Feedback[] = [
-  {
-    id: 1,
-    name: "Carlos Silva",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    clientMsg: "Instalei o app aqui agora e gostei muito, bem rápido 👏",
-    clientTime: "10:42",
-    supportMsg: "Que bom saber disso! Muito obrigado pelo feedback 🙌",
-    supportTime: "10:45"
-  },
-  {
-    id: 3,
-    name: "Roberto Mendes",
-    avatar: "https://randomuser.me/api/portraits/men/85.jpg",
-    clientMsg: "Peguei o plano de 3 meses e está funcionando perfeito até agora.",
-    clientTime: "09:20",
-    supportMsg: "Obrigado pela confiança! Esperamos que aproveite bastante.",
-    supportTime: "09:25"
-  },
-  {
-    id: 5,
-    name: "Marcos Oliveira",
-    avatar: "https://randomuser.me/api/portraits/men/12.jpg",
-    clientMsg: "O suporte de vocês é nota 10, me ajudaram rapidinho a configurar na TV.",
-    clientTime: "11:30",
-    supportMsg: "Conte sempre com a gente! O importante é você conseguir assistir.",
-    supportTime: "11:35"
-  },
-  {
-    id: 6,
-    name: "Fernanda Lima",
-    avatar: "https://randomuser.me/api/portraits/women/22.jpg",
-    clientMsg: "Melhor IPTV que já testei, não trava nada na novela.",
-    clientTime: "19:10",
-    supportMsg: "Focamos muito na estabilidade! Boa novela pra você 📺",
-    supportTime: "19:12"
-  },
-  {
-    id: 7,
-    name: "Luciana Costa",
-    avatar: "https://randomuser.me/api/portraits/women/45.jpg",
-    clientMsg: "Gente, tô chocada com a quantidade de filmes que tem! Tem tudo que tá no cinema e muito mais, tô amando real.",
-    clientTime: "14:15",
-    supportMsg: "Ficamos felizes que gostou! Nossa biblioteca de filmes é atualizada toda semana com os últimos lançamentos 🎬",
-    supportTime: "14:20"
-  },
-  {
-    id: 8,
-    name: "Ricardo Santos",
-    avatar: "https://randomuser.me/api/portraits/men/46.jpg",
-    clientMsg: "Finalmente um IPTV que não cai no meio do jogo do Flamengo kkkk valeu Leandro!",
-    clientTime: "16:45",
-    supportMsg: "Aqui o sinal é garantido até o apito final! Valeu pela confiança ⚽",
-    supportTime: "16:48"
-  },
-  {
-    id: 9,
-    name: "Juliana Pereira",
-    avatar: "https://randomuser.me/api/portraits/women/50.jpg",
-    clientMsg: "Minha filha tá amando os desenhos, e eu os filmes. Recomendo demais!",
-    clientTime: "20:30",
-    supportMsg: "Ficamos felizes em divertir toda a família! Aproveitem bastante 🍿",
-    supportTime: "20:35"
-  }
-];
-
-const FeedbackCard = memo(({ feedback, index, total, onSwipe, depth }: any) => {
-  const x = useMotionValue(0);
-  const rotate = useTransform(x, [-200, 200], [-25, 25]);
-  const opacity = useTransform(x, [-200, -150, 0, 150, 200], [0, 1, 1, 1, 0]);
-
-  const handleDragEnd = (_: any, info: any) => {
-    const swipeThreshold = 100;
-    const velocityThreshold = 500;
-
-    if (Math.abs(info.offset.x) > swipeThreshold || Math.abs(info.velocity.x) > velocityThreshold) {
-      onSwipe();
-    }
-  };
-
-  const isTop = depth === 0;
-
-  useEffect(() => {
-    if (!isTop) {
-      x.set(0);
-    }
-  }, [isTop, x]);
-
+const FAQItem = ({ question, answer }: { question: string, answer: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <motion.div
-      initial={false}
-      animate={{
-        scale: 1 - depth * 0.05,
-        y: depth * 15,
-        opacity: depth > 2 ? 0 : 1,
-      }}
-      style={{
-        x,
-        rotate,
-        opacity,
-        zIndex: total - depth,
-        willChange: "transform, opacity",
-        transformStyle: "preserve-3d",
-        backfaceVisibility: "hidden",
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 40,
-        mass: 0.8,
-      }}
-      drag={isTop ? "x" : false}
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.6}
-      dragMomentum={false}
-      dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
-      onDragEnd={handleDragEnd}
-      className="absolute top-0 left-0 w-full h-[500px] flex flex-col cursor-grab active:cursor-grabbing touch-none"
-    >
-      <div className="bg-[#111b21] rounded-[2.5rem] overflow-hidden border-[8px] border-[#202c33] shadow-xl md:shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative group flex flex-col h-full transform-gpu">
-        {/* Phone Notch/Speaker */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#202c33] rounded-b-2xl z-20 flex items-center justify-center gap-2">
-          <div className="w-8 h-1 bg-[#2a3942] rounded-full"></div>
-          <div className="w-2 h-2 bg-[#2a3942] rounded-full"></div>
-        </div>
-
-        {/* App Header */}
-        <div className="bg-[#202c33] px-5 pt-8 pb-4 flex items-center justify-between text-[#e9edef] relative z-10">
-          <div className="flex items-center gap-3">
-            <ArrowLeft size={22} className="text-[#8696a0]" />
-            <div className="relative">
-              <div className="w-11 h-11 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold border-2 border-white/5">
-                {feedback.name.charAt(0)}
-              </div>
-              <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#00a884] border-2 border-[#202c33] rounded-full"></div>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-base leading-tight text-[#e9edef]">{feedback.name}</span>
-              <span className="text-[11px] text-[#8696a0] leading-tight">Visto por último hoje às {feedback.clientTime}</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 text-[#8696a0]">
-            <Video size={20} />
-            <Phone size={18} />
-            <MoreVertical size={18} />
-          </div>
-        </div>
-
-        {/* Chat Area */}
-        <div className="bg-[#0b141a] flex-1 p-5 flex flex-col relative overflow-hidden">
-          {/* Background Pattern Overlay removed */}
-          <div className="absolute inset-0 opacity-[0.08] bg-[#0b141a] pointer-events-none"></div>
-          
-          <div className="relative z-10 flex flex-col gap-6">
-            <div className="flex justify-center">
-              <span className="bg-[#1f2c34] text-[#8696a0] text-[11px] px-3 py-1 rounded-lg shadow-sm font-semibold uppercase tracking-wider border border-[#202c33]">Hoje</span>
-            </div>
-            
-            {/* Incoming Message (Client) */}
-            <div className="self-start relative max-w-[85%]">
-              {/* Message Tail */}
-              <svg className="absolute -left-2 top-0 text-[#202c33]" width="8" height="13" viewBox="0 0 8 13">
-                <path fill="currentColor" d="M1.533 3.568 8 12.193V1H2.812C1.042 1 .474 2.156 1.533 3.568z"></path>
-              </svg>
-              <div className="bg-[#202c33] rounded-lg rounded-tl-none p-3 shadow-md relative">
-                <p className="text-[15px] text-[#e9edef] leading-relaxed pr-12">{feedback.clientMsg}</p>
-                <div className="absolute bottom-1.5 right-2 flex items-center gap-1">
-                  <span className="text-[10px] text-[#8696a0]">{feedback.clientTime}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Outgoing Message (Support) */}
-            <div className="self-end relative max-w-[85%] ml-auto">
-              {/* Message Tail */}
-              <svg className="absolute -right-2 top-0 text-[#005c4b]" width="8" height="13" viewBox="0 0 8 13">
-                <path fill="currentColor" d="M6.467 3.568 0 12.193V1h5.188C6.958 1 7.526 2.156 6.467 3.568z"></path>
-              </svg>
-              <div className="bg-[#005c4b] rounded-lg rounded-tr-none p-3 shadow-md relative">
-                <p className="text-[15px] text-[#e9edef] leading-relaxed pr-16">{feedback.supportMsg}</p>
-                <div className="absolute bottom-1.5 right-2 flex items-center gap-0.5">
-                  <span className="text-[10px] text-[#8696a0]/90">{feedback.supportTime}</span>
-                  <CheckCheck size={15} className="text-[#53bdeb]" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Chat Input Area (Visual Only) */}
-        <div className="bg-[#202c33] p-3 px-4 flex items-center gap-3 relative z-10">
-          <div className="p-1 text-[#8696a0]"><Zap size={20} /></div>
-          <div className="flex-1 bg-[#2a3942] rounded-full px-4 py-2 text-[#8696a0] text-sm">Mensagem</div>
-          <div className="p-1 text-[#8696a0]"><Phone size={20} /></div>
-        </div>
-      </div>
-    </motion.div>
-  );
-});
-
-const FeedbackStack = ({ items }: any) => {
-  const [stack, setStack] = useState(items);
-
-  const handleSwipe = useCallback(() => {
-    setStack((prev) => {
-      const newStack = [...prev];
-      const swipedItem = newStack.pop();
-      if (swipedItem) newStack.unshift(swipedItem);
-      return newStack;
-    });
-  }, []);
-
-  // Only render the top 3 cards for maximum performance
-  const visibleCards = stack.slice(-3);
-
-  return (
-    <div className="relative w-full h-full">
-      {visibleCards.map((feedback, index) => {
-        const depth = visibleCards.length - 1 - index;
-        return (
-          <FeedbackCard
-            key={feedback.id}
-            feedback={feedback}
-            index={index}
-            total={stack.length}
-            depth={depth}
-            onSwipe={handleSwipe}
-          />
-        );
-      })}
+    <div className="border-b border-white/10">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full py-6 flex items-center justify-between text-left focus:outline-none"
+      >
+        <span className="text-lg font-medium text-white">{question}</span>
+        <ChevronDown className={`w-5 h-5 text-blue-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <p className="pb-6 text-slate-400 leading-relaxed">{answer}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-const HowItWorksSection = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const pathDesktopRef = useRef<SVGPathElement>(null);
-  const pathMobileRef = useRef<SVGPathElement>(null);
-  const stepsRef = useRef<(HTMLDivElement | null)[]>([]);
+export default function App() {
+  const handleContactClick = (planName: string, price: number) => {
+    trackPixelEvent('Contact', {
+      content_name: planName,
+      value: price,
+      currency: 'BRL'
+    });
+  };
 
-  useEffect(() => {
-    const container = containerRef.current;
-    const pathDesktop = pathDesktopRef.current;
-    const pathMobile = pathMobileRef.current;
-    if (!container) return;
-
-    const initPath = (path: SVGPathElement | null) => {
-      if (!path) return 0;
-      const length = path.getTotalLength();
-      path.style.strokeDasharray = `${length}`;
-      path.style.strokeDashoffset = `${length}`;
-      return length;
-    };
-
-    let lengthDesktop = initPath(pathDesktop);
-    let lengthMobile = initPath(pathMobile);
-
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const rect = container.getBoundingClientRect();
-          const windowHeight = window.innerHeight;
-          
-          // Cálculo de progresso mais preciso baseado na viewport
-          const startTrigger = windowHeight * 0.8;
-          const endTrigger = windowHeight * 0.4;
-          const progressRange = rect.height + (startTrigger - endTrigger);
-          const currentPos = startTrigger - rect.top;
-          
-          let drawPercent = currentPos / progressRange;
-          drawPercent = Math.max(0, Math.min(1, drawPercent));
-
-          if (pathDesktop) {
-            pathDesktop.style.strokeDashoffset = `${lengthDesktop - (lengthDesktop * drawPercent)}`;
-          }
-          if (pathMobile) {
-            pathMobile.style.strokeDashoffset = `${lengthMobile - (lengthMobile * drawPercent)}`;
-          }
-
-          stepsRef.current.forEach((step, index) => {
-            if (!step) return;
-            // Thresholds recalibrados para os 4 passos
-            const threshold = index / (steps.length - 1);
-            if (drawPercent >= threshold * 0.85) { // Ativação levemente antecipada para fluidez
-              step.classList.add('opacity-100', 'scale-100', 'translate-y-0');
-              step.classList.remove('opacity-0', 'scale-75', 'translate-y-8');
-              const icon = step.querySelector('.step-icon');
-              if (icon) {
-                icon.classList.add('animate-pulse-glow');
-                icon.classList.replace('border-transparent', 'border-[#00CFFF]');
-              }
-            } else {
-              step.classList.remove('opacity-100', 'scale-100', 'translate-y-0');
-              step.classList.add('opacity-0', 'scale-75', 'translate-y-8');
-              const icon = step.querySelector('.step-icon');
-              if (icon) {
-                icon.classList.remove('animate-pulse-glow');
-                icon.classList.replace('border-[#00CFFF]', 'border-transparent');
-              }
-            }
-          });
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-    
-    const handleResize = () => {
-      lengthDesktop = initPath(pathDesktop);
-      lengthMobile = initPath(pathMobile);
-      handleScroll();
-    };
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  const steps = [
-    { id: 1, title: "ESCOLHA O PLANO", desc: "Selecione o plano de IPTV que melhor atende sua necessidade.", icon: ShoppingCart },
-    { id: 2, title: "FALE CONOSCO", desc: "Clique no botão e fale direto com um suporte IPTV via WhatsApp.", icon: MessageCircle },
-    { id: 3, title: "RECEBA O ACESSO", desc: "Liberação imediata! Basta configurar sua lista IPTV atualizada.", icon: Key },
-    { id: 4, title: "APERTE O PLAY", desc: "Comece a assistir seus conteúdos favoritos na hora em qualquer dispositivo.", icon: PlayCircle }
-  ];
+  const handleFreeTrialClick = () => {
+    trackPixelEvent('Contact', { content_name: 'Teste Grátis' });
+  };
 
   return (
-    <section id="como-funciona" className="relative w-full bg-[#020b16] py-12 overflow-hidden">
-      {/* Background Overlay removed */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020b16] via-[#020b16]/60 to-[#020b16]"></div>
-      </div>
-
-      <motion.div 
-        variants={containerRevealVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-      >
-        <div className="text-center mb-16 md:mb-24">
-          <motion.h2 variants={revealVariants} className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-            COMO FUNCIONA O <span className="text-[#00CFFF] drop-shadow-[0_0_15px_rgba(0,207,255,0.5)]">IPTV?</span>
-          </motion.h2>
-          <motion.p variants={revealVariants} className="text-gray-400 text-lg max-w-2xl mx-auto">Siga nossa jornada simples e rápida para ter acesso ao melhor entretenimento.</motion.p>
-        </div>
-
-        <div className="relative w-full max-w-5xl mx-auto" ref={containerRef}>
-          {/* Desktop SVG Path */}
-          <div className="hidden md:block absolute top-1/2 left-0 w-full h-48 -translate-y-1/2 pointer-events-none z-0">
-            <svg viewBox="0 0 1000 200" className="w-full h-full overflow-visible" preserveAspectRatio="none">
-              <path d="M 140 100 C 260 0, 260 200, 380 100 C 500 0, 500 200, 620 100 C 740 0, 740 200, 860 100" 
-                    fill="none" stroke="transparent" strokeWidth="4" strokeLinecap="round" />
-              <path ref={pathDesktopRef} d="M 140 100 C 260 0, 260 200, 380 100 C 500 0, 500 200, 620 100 C 740 0, 740 200, 860 100" 
-                    fill="none" stroke="#00CFFF" strokeWidth="6" strokeLinecap="round" 
-                    style={{ filter: 'drop-shadow(0 0 8px rgba(0,207,255,0.8))', transition: 'stroke-dashoffset 0.1s ease-out' }} />
-            </svg>
+    <div className="min-h-screen bg-[#060B14] font-sans text-slate-300 selection:bg-blue-500/30 overflow-x-hidden">
+      {/* Navigation */}
+      <nav className="fixed top-0 inset-x-0 z-50 bg-[#060B14]/80 backdrop-blur-xl border-b border-white/5">
+        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+              <Play className="w-5 h-5 text-white fill-white" />
+            </div>
+            <span className="text-xl font-bold text-white tracking-tight">Leandro TV<span className="text-blue-500">+</span></span>
           </div>
-
-          {/* Mobile SVG Path */}
-          <div className="block md:hidden absolute top-0 left-8 w-8 h-full pointer-events-none z-0">
-            <svg viewBox="0 0 20 800" className="w-full h-full overflow-visible" preserveAspectRatio="none">
-              <path d="M 10 100 L 10 700" fill="none" stroke="transparent" strokeWidth="4" strokeLinecap="round" />
-              <path ref={pathMobileRef} d="M 10 100 L 10 700" fill="none" stroke="#00CFFF" strokeWidth="6" strokeLinecap="round" 
-                    style={{ filter: 'drop-shadow(0 0 8px rgba(0,207,255,0.8))', transition: 'stroke-dashoffset 0.1s ease-out' }} />
-            </svg>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#beneficios" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Benefícios</a>
+            <a href="#como-funciona" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Como Funciona</a>
+            <a href="#planos" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Planos</a>
+            <a href="#faq" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Dúvidas</a>
           </div>
-
-          {/* Steps Container */}
-          <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-12 md:gap-4">
-            {steps.map((step, index) => (
-              <div 
-                key={step.id} 
-                ref={el => stepsRef.current[index] = el}
-                className="flex flex-row md:flex-col items-center md:items-center gap-6 md:gap-6 w-full md:w-1/4 opacity-0 scale-75 translate-y-8 transition-all duration-700 ease-out"
-              >
-                {/* Node / Icon */}
-                <div className="relative flex-shrink-0">
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#020b16] border-4 border-transparent flex items-center justify-center relative z-10 step-icon transition-colors duration-500">
-                    <step.icon className="w-8 h-8 md:w-10 md:h-10 text-[#00CFFF]" />
-                  </div>
-                  {/* Number Badge */}
-                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-[#00CFFF] text-[#0a0a1a] font-bold flex items-center justify-center text-sm z-20 shadow-[0_0_10px_rgba(0,207,255,0.8)]">
-                    {step.id}
-                  </div>
-                </div>
-
-                {/* Content Card */}
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 md:p-6 text-left md:text-center w-full shadow-xl hover:bg-white/10 transition-colors">
-                  <h3 className="text-lg md:text-xl font-bold text-white mb-2">{step.title}</h3>
-                  <p className="text-sm md:text-base text-gray-400 leading-relaxed">{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-    </section>
-  );
-};
-
-function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
-  const [activeModalTab, setActiveModalTab] = useState(0);
-  const [isFeatureModalOpen, setIsFeatureModalOpen] = useState(false);
-  const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
-  const [isMultiplatformModalOpen, setIsMultiplatformModalOpen] = useState(false);
-  const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
-  const [isContractModalOpen, setIsContractModalOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-
-  const features = [
-    {
-      id: 'zero-travamentos',
-      title: 'IPTV Zero Travamentos',
-      desc: 'Clique para ver detalhes da nossa infraestrutura.',
-      icon: Rocket,
-      action: () => setIsFeatureModalOpen(true)
-    },
-    {
-      id: 'catalogo',
-      title: 'Lista IPTV Atualizada',
-      desc: 'Clique para ver detalhes sobre nosso acervo.',
-      icon: Film,
-      action: () => setIsCatalogModalOpen(true)
-    },
-    {
-      id: 'multiplataforma',
-      title: 'IPTV Multiplataforma',
-      desc: 'Clique para ver detalhes sobre compatibilidade.',
-      icon: MonitorSmartphone,
-      action: () => setIsMultiplatformModalOpen(true)
-    },
-    {
-      id: 'suporte',
-      title: 'Suporte Premium',
-      desc: 'Clique para falar com nosso suporte.',
-      icon: Headset,
-      action: () => setIsSupportModalOpen(true)
-    },
-    {
-      id: 'contrato',
-      title: 'IPTV sem contrato',
-      desc: 'Clique para saber mais sobre nossa política sem fidelidade.',
-      icon: Unlock,
-      action: () => setIsContractModalOpen(true)
-    }
-  ];
-
-
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-
-
-  return (
-    <div className="min-h-screen bg-[var(--color-brand-navy-dark)] text-white selection:bg-[var(--color-brand-cyan)] selection:text-white scroll-smooth overflow-x-hidden">
-      {/* SVG Gradient Definition */}
-      <svg width="0" height="0" className="absolute pointer-events-none">
-        <defs>
-          <linearGradient id="blue-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#43afef" />
-            <stop offset="100%" stopColor="#7decf1" />
-          </linearGradient>
-        </defs>
-      </svg>
-
-      {/* Logo Modal (Informative - Multi-tab Blue Glass) */}
-      <AnimatePresence>
-        {isLogoModalOpen && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-            onClick={() => setIsLogoModalOpen(false)}
+          <a
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleFreeTrialClick}
+            className="hidden sm:flex items-center gap-2 px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]"
           >
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 30 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 30 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative max-w-md w-full bg-blue-900/30 backdrop-blur-2xl border-2 border-blue-400/30 rounded-[40px] shadow-[0_0_50px_rgba(30,58,138,0.5),inset_0_0_20px_rgba(147,197,253,0.2)] overflow-visible"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close Button */}
-              <button 
-                onClick={() => setIsLogoModalOpen(false)}
-                className="absolute top-6 right-8 z-20 p-3 -m-3 text-white/50 hover:text-white transition-colors"
-              >
-                <X className="w-6 h-6" />
-              </button>
+            Teste Grátis
+          </a>
+        </div>
+      </nav>
 
-              {/* Logo Overlapping Top */}
-              <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-20">
-                <div className="relative group">
-                  {/* Soft Ethereal Glow */}
-                  <div className="absolute -inset-4 bg-blue-500/20 blur-3xl rounded-full opacity-70 group-hover:opacity-100 transition-opacity duration-700 animate-pulse"></div>
-                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-400/30 to-cyan-400/30 blur-md rounded-full"></div>
-                  
-                  <div className="relative h-24 w-24 rounded-full border-2 border-blue-400/40 p-1.5 bg-blue-950/40 backdrop-blur-xl shadow-2xl flex items-center justify-center">
-                    <Zap className="w-12 h-12 text-blue-400" />
-                  </div>
-                  
-                  {/* Floating Label */}
-                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-500/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-blue-200 border border-blue-400/30 shadow-lg whitespace-nowrap tracking-wider uppercase">
-                    Leandro TV+
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-16 pb-8 px-8 flex flex-col items-center text-center">
-                <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-blue-200 mb-8 tracking-tight">
-                  Sobre a Leandro TV+
-                </h2>
-
-                {/* Content Area */}
-                <div className="w-full space-y-6 text-left mb-10">
-                  <div className="flex items-start gap-4 group">
-                    <div className="mt-1 p-2.5 rounded-xl bg-blue-400/10 border border-blue-400/20 text-blue-300 group-hover:bg-blue-400 group-hover:text-white transition-colors">
-                      <Zap className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-bold text-sm">Ativação Instantânea</h3>
-                      <p className="text-blue-100/60 text-xs leading-relaxed">Receba seus dados de acesso em poucos minutos após a confirmação.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 group">
-                    <div className="mt-1 p-2.5 rounded-xl bg-blue-400/10 border border-blue-400/20 text-blue-300 group-hover:bg-blue-400 group-hover:text-white transition-colors">
-                      <Smartphone className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-bold text-sm">Compatibilidade Total</h3>
-                      <p className="text-blue-100/60 text-xs leading-relaxed">Smart TVs, Celulares, Tablets, TV Box e Computadores.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 group">
-                    <div className="mt-1 p-2.5 rounded-xl bg-blue-400/10 border border-blue-400/20 text-blue-300 group-hover:bg-blue-400 group-hover:text-white transition-colors">
-                      <Rocket className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-bold text-sm">Servidores Premium</h3>
-                      <p className="text-blue-100/60 text-xs leading-relaxed">Servidores dedicados com tecnologia anti-travamento de última geração.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 group">
-                    <div className="mt-1 p-2.5 rounded-xl bg-blue-400/10 border border-blue-400/20 text-blue-300 group-hover:bg-blue-400 group-hover:text-white transition-colors">
-                      <Unlock className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-bold text-sm">Sem Fidelidade</h3>
-                      <p className="text-blue-100/60 text-xs leading-relaxed">Cancele quando quiser, sem multas ou contratos abusivos.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Buttons */}
-                <div className="w-full flex gap-4">
-                  <a 
-                    href="#planos"
-                    onClick={() => setIsLogoModalOpen(false)}
-                    className="flex-1 py-4 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-2xl shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all active:scale-95 text-center"
-                  >
-                    Ver Planos
-                  </a>
-                  <button 
-                    onClick={() => setIsLogoModalOpen(false)}
-                    className="flex-1 py-4 bg-red-500 hover:bg-red-400 text-white font-bold rounded-2xl shadow-[0_0_20px_rgba(239,68,68,0.4)] transition-all active:scale-95"
-                  >
-                    Fechar
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Header */}
-      <header 
-        className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-          isScrolled 
-            ? 'bg-blue-900/20 backdrop-blur-sm py-2 shadow-[0_4px_30px_rgba(0,0,0,0.3)]' 
-            : 'bg-transparent py-4'
-        }`}
-      >
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            {/* Logo */}
-            <div 
-              className="flex items-center gap-4 group cursor-pointer"
-              onClick={() => setIsLogoModalOpen(true)}
-            >
-              <div className="relative">
-                {/* Subtle blue border glow */}
-                <div className="absolute -inset-1 bg-blue-500/40 blur-md rounded-full opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative h-14 w-14 bg-blue-950/40 backdrop-blur-xl rounded-full border-2 border-blue-400/50 flex items-center justify-center shadow-[0_0_15px_rgba(67,175,239,0.3)]">
-                  <span className="text-blue-400 font-black text-xl">L</span>
-                </div>
-              </div>
-              <span className="text-2xl font-black tracking-tighter text-white hidden sm:block">
-                Leandro TV+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-[500px] bg-gradient-to-b from-blue-600/10 via-blue-900/5 to-transparent pointer-events-none"></div>
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] md:w-[800px] md:h-[800px] bg-blue-600/5 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div className="container mx-auto px-6 relative z-10 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-center"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-8">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
               </span>
+              Sinal Digital Estável 24/7
             </div>
 
-      {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-8">
-              <a href="#inicio" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Início</a>
-              <a href="#como-funciona" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Como Funciona</a>
-              <a href="#recursos" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Sobre</a>
-              <a href="#planos" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Planos</a>
-              <a href="#feedbacks" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Depoimentos</a>
-              <a href="#duvidas" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Dúvidas</a>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden p-3 -m-1 text-gray-300 hover:text-white transition-colors"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Nav Sidebar */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            {/* Backdrop Overlay */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm md:hidden"
-            />
-            
-            {/* Sidebar Content */}
-            <motion.div 
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-[280px] z-[70] bg-blue-950/40 backdrop-blur-2xl border-l border-blue-400/20 shadow-2xl md:hidden flex flex-col"
-            >
-              {/* Sidebar Header */}
-              <div className="p-6 flex justify-between items-center border-b border-blue-400/10">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold border border-blue-400/30">
-                    L
-                  </div>
-                  <span className="text-lg font-bold text-white tracking-tight">Leandro TV+</span>
-                </div>
-                <button 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-3 -m-1 text-gray-300 hover:text-white transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              {/* Sidebar Links */}
-              <div className="flex-1 px-6 py-8 space-y-6 overflow-y-auto">
-                <a href="#inicio" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
-                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  Início
-                </a>
-                <a href="#como-funciona" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
-                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  Como Funciona
-                </a>
-                <a href="#recursos" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
-                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  Sobre
-                </a>
-                <a href="#planos" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
-                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  Planos
-                </a>
-                <a href="#feedbacks" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
-                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  Depoimentos
-                </a>
-                <a href="#duvidas" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4 text-lg font-medium text-gray-300 hover:text-white transition-colors group">
-                  <div className="w-1 h-1 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  Dúvidas
-                </a>
-              </div>
-
-              {/* Sidebar Footer */}
-              <div className="p-6 border-t border-blue-400/10">
-                <p className="text-[10px] text-center text-blue-100/30 uppercase tracking-widest">
-                  Leandro TV+ © 2026
-                </p>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-      <section id="inicio" className="relative min-h-fit md:h-[90vh] md:min-h-[600px] w-full flex items-center pt-24 pb-8 md:py-0">
-        {/* Background Overlay removed */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-brand-navy-dark)] via-[var(--color-brand-navy-dark)]/60 to-transparent w-[80%]"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-brand-navy-dark)] via-transparent to-black/40"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--color-brand-navy-dark)]"></div>
-        </div>
-
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 w-full pt-0 md:pt-20">
-          <div className="max-w-2xl">
-            <h1 className="text-3xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-2 md:mb-4 leading-tight drop-shadow-2xl">
-              A Melhor Experiência de <br />
-              <span className="texto-gradiente">TV Online</span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight mb-8 max-w-4xl leading-[1.1]">
+              TV Online com Qualidade Premium e <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Máxima Estabilidade</span>
             </h1>
-            <p className="text-base sm:text-2xl text-white font-medium mb-6 md:mb-8 drop-shadow-lg max-w-xl">
-              Acesse a melhor TV Online com canais ao vivo, filmes online e séries completas em TV ao vivo HD e 4K. Experiência de cinema com o Melhor IPTV do mercado.
+            
+            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+              Assista seus canais, filmes, séries e esportes favoritos em qualquer dispositivo. Sem travamentos, sem antenas e com qualidade incrível.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
               <a 
                 href={WHATSAPP_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => trackPixelEvent('Contact', { content_name: 'Hero Assinar Agora' })}
-                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#008F4C] to-[#00FF7F] text-white px-8 py-4 rounded-full font-bold text-xl transition-all shadow-[0_0_20px_rgba(0,255,127,0.3)] hover:shadow-[0_0_30px_rgba(0,255,127,0.6)] transform hover:scale-105 w-full sm:w-auto"
+                onClick={handleFreeTrialClick}
+                className="w-full sm:w-auto px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:shadow-[0_0_40px_rgba(37,99,235,0.6)] hover:-translate-y-1 flex items-center justify-center gap-2"
               >
-                <Play className="w-6 h-6 fill-current" />
-                Assinar Agora
+                Teste Grátis Agora <ChevronRight className="w-5 h-5" />
               </a>
               <a 
-                href="#planos"
-                onClick={() => trackPixelEvent('ViewContent', { content_name: 'Hero Ver Planos' })}
-                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#0062E6] to-[#33AEFF] hover:brightness-110 text-white px-8 py-4 rounded-full font-bold text-xl transition-all backdrop-blur-sm border border-white/20 transform hover:scale-105 w-full sm:w-auto shadow-[0_0_20px_rgba(0,98,230,0.3)] hover:shadow-[0_0_30px_rgba(0,98,230,0.6)]"
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackPixelEvent('Contact', { content_name: 'Hero WhatsApp' })}
+                className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-lg transition-all flex items-center justify-center gap-2"
               >
-                <Info className="w-6 h-6" />
-                <span>Ver Planos IPTV</span>
+                <MessageCircle className="w-5 h-5" /> Falar no WhatsApp
               </a>
+            </div>
+
+            <div className="mt-12 flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-sm font-medium text-slate-400">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-blue-500" /> Atendimento rápido
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-blue-500" /> Alta estabilidade
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-blue-500" /> Compatível com Smart TV
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Social Proof Section */}
+      <section className="py-10 border-y border-white/5 bg-white/[0.02]">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+            <div className="flex -space-x-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className={`w-12 h-12 rounded-full border-2 border-[#060B14] flex items-center justify-center font-bold text-white shadow-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-md`}>
+                  {String.fromCharCode(64 + i)}
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col items-center md:items-start text-center md:text-left">
+              <div className="flex items-center gap-1 mb-1">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star key={i} className="w-5 h-5 fill-yellow-500 text-yellow-500" />
+                ))}
+              </div>
+              <p className="text-white font-medium">Mais de 5.000 clientes satisfeitos</p>
+              <p className="text-sm text-slate-400">Avaliações 5 estrelas em nosso suporte</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Carousel */}
-      <section id="recursos" className="pt-12 pb-10 relative z-20 mt-0 md:-mt-20">
-        {/* Background Overlay removed */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-brand-navy-dark)] via-[var(--color-brand-navy-dark)]/80 to-[var(--color-brand-navy-dark)]"></div>
-        </div>
-
-        <motion.div 
-          variants={containerRevealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-        >
-          <motion.h2 variants={revealVariants} className="text-2xl md:text-3xl font-bold mb-2 px-2 text-white">Por Que Nos Escolher?</motion.h2>
-          <motion.h3 variants={revealVariants} className="text-xl md:text-2xl font-bold mb-4 px-2 uppercase tracking-wide">
-            <span className="texto-gradiente">O MELHOR SERVIÇO DE IPTV PREMIUM DO BRASIL</span>
-          </motion.h3>
-          
-          <motion.p variants={revealVariants} className="text-gray-300 px-2 mb-8 max-w-4xl text-lg leading-relaxed">
-            A Leandro TV+ é referência em Streaming de alta performance. Oferecemos o melhor IPTV do Brasil para quem busca qualidade, estabilidade e zero travamentos. Esqueça as antenas, fiações e instalações complicadas: com nossa lista IPTV atualizada, você tem o mundo do entretenimento na palma da sua mão.
-          </motion.p>
-
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8 pb-8 pt-4 px-2 max-w-5xl mx-auto">
-            {features.slice(0, 4).map((feature, index) => (
-              <motion.div 
-                key={`${feature.id}-${index}`}
-                variants={revealVariants}
-                onClick={feature.action}
-                className="w-full aspect-[4/5] md:aspect-square bg-[#0a1623] rounded-2xl border border-white/10 relative group cursor-pointer transition-all duration-500 hover:scale-[1.02] md:hover:scale-105 hover:z-30 hover:shadow-[0_20px_50px_-10px_rgba(67,175,239,0.2)] overflow-hidden flex flex-col items-center justify-center p-4 md:p-8"
-              >
-                {/* Animated Background Glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-brand-cyan)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                {/* Central Destaque Icon */}
-                <div className="mb-4 md:mb-8 p-4 md:p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 z-20 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-2xl">
-                  <feature.icon className="w-8 h-8 md:w-16 md:h-16 text-[var(--color-brand-cyan)] drop-shadow-[0_0_15px_rgba(67,175,239,0.8)]" />
-                </div>
-
-                <div className="text-center z-20">
-                  <h3 className="text-sm md:text-xl font-black text-white mb-1 md:mb-2 uppercase tracking-tight group-hover:text-[var(--color-brand-cyan)] transition-colors duration-300 leading-tight">{feature.title}</h3>
-                  <p className="text-[10px] md:text-sm text-gray-400 font-medium opacity-80 group-hover:opacity-100 transition-opacity line-clamp-2 md:line-clamp-none">
-                    {feature.desc}
-                  </p>
-                </div>
-                
-                {/* Border Glow Effect */}
-                <div className="absolute inset-0 border-2 border-[var(--color-brand-cyan)]/0 group-hover:border-[var(--color-brand-cyan)]/40 rounded-2xl transition-all duration-500 z-30 pointer-events-none"></div>
-              </motion.div>
-            ))}
+      {/* Benefits Section */}
+      <section id="beneficios" className="py-24 bg-[#060B14]">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">O que fazemos de melhor</h2>
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto">Uma infraestrutura premium desenhada para oferecer a melhor experiência em streaming.</p>
           </div>
 
-          <motion.p variants={revealVariants} className="text-gray-300 px-2 mb-8 max-w-4xl text-lg leading-relaxed">
-            Seja para assistir ao futebol ao vivo, filmes recém-lançados ou maratonar suas séries favoritas, nossa infraestrutura de IPTV premium entrega a menor latência e a melhor fidelidade de som e imagem com qualidade 4K.
-          </motion.p>
-
-          <motion.div variants={revealVariants} className="flex justify-center md:justify-start px-2">
-            <a 
-              href="#planos"
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#008F4C] to-[#00FF7F] text-white px-8 py-3.5 rounded-full font-bold text-lg transition-all shadow-[0_0_20px_rgba(0,255,127,0.2)] hover:shadow-[0_0_30px_rgba(0,255,127,0.5)] hover:scale-105 active:scale-95"
-            >
-              CONHECER A LEANDRO TV+
-            </a>
-          </motion.div>
-        </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: Zap, title: "Alta Qualidade", desc: "Transmissões em Ultra HD, 4K e FHD para você aproveitar cada detalhe na sua TV." },
+              { icon: Headset, title: "Suporte Rápido", desc: "Atendimento humano e dedicado pelo WhatsApp. Estamos sempre prontos para ajudar." },
+              { icon: MonitorSmartphone, title: "Compatibilidade Total", desc: "Assista na Smart TV, celular, computador, TV Box ou Chromecast com facilidade." },
+              { icon: CheckCircle2, title: "Instalação Simples", desc: "Configuração em menos de 5 minutos, auxiliada por tutoriais passo a passo." },
+              { icon: Play, title: "Conteúdo Atualizado", desc: "Acesso aos filmes recém-lançados, séries do momento e todos os canais ao vivo." },
+              { icon: ShieldCheck, title: "Excelente Estabilidade", desc: "Servidores otimizados com sistema anti-travamentos (Anti-Block) de alta performance." }
+            ].map((benefit, i) => (
+              <div key={i} className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-blue-500/30 transition-all duration-300 group">
+                <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <benefit.icon className="w-7 h-7 text-blue-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">{benefit.title}</h3>
+                <p className="text-slate-400 leading-relaxed">{benefit.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <HowItWorksSection />
-
-      {/* Games Access Section */}
-      <section className="relative py-16 md:py-32 overflow-hidden">
-        {/* Background Overlay removed */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#020b16] via-[#020b16]/80 to-transparent"></div>
+      {/* Devices Section */}
+      <section className="py-24 bg-gradient-to-b from-white/[0.01] to-[#060B14] border-y border-white/5">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold text-white mb-16 tracking-tight">Assista onde quiser</h2>
+          <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-70">
+            <div className="flex flex-col items-center gap-4">
+              <Tv className="w-16 h-16 text-slate-300" />
+              <span className="font-medium text-slate-300">Smart TV</span>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <MonitorSmartphone className="w-16 h-16 text-slate-300" />
+              <span className="font-medium text-slate-300">TV Box</span>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Smartphone className="w-16 h-16 text-slate-300" />
+              <span className="font-medium text-slate-300">Celulares</span>
+            </div>
+            <div className="flex flex-col items-center gap-4">
+              <Laptop className="w-16 h-16 text-slate-300" />
+              <span className="font-medium text-slate-300">Computadores</span>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <motion.div 
-          variants={containerRevealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-        >
-          <div className="max-w-2xl">
-            <motion.h2 
-              variants={revealVariants}
-              className="text-3xl md:text-5xl font-black text-white mb-6 uppercase leading-tight"
-            >
-              Com a <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Leandro TV+</span> você tem acesso a todos os seus <span className="text-[var(--color-brand-cyan)]">jogos</span>
-            </motion.h2>
+      {/* How it Works Section */}
+      <section id="como-funciona" className="py-24 bg-[#060B14]">
+        <div className="container mx-auto px-6 max-w-5xl text-center">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-16 tracking-tight">Três passos para começar</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+            {/* Connecting lines for desktop */}
+            <div className="hidden md:block absolute top-[28px] left-[15%] right-[15%] h-[2px] bg-gradient-to-r from-blue-500/0 via-blue-500/30 to-blue-500/0 -z-10"></div>
             
-            <motion.p 
-              variants={revealVariants}
-              className="text-gray-300 text-lg md:text-xl mb-8 font-medium"
-            >
-              Não perca nenhum lance do seu time do coração. Acompanhe campeonatos nacionais e internacionais com a melhor qualidade de imagem.
-            </motion.p>
-
-            <motion.a
+            <div className="flex flex-col items-center">
+              <div className="w-14 h-14 rounded-full bg-blue-600 text-white font-bold text-xl flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(37,99,235,0.4)]">1</div>
+              <h3 className="text-xl font-bold text-white mb-3">Solicite o teste</h3>
+              <p className="text-slate-400">Clique no botão para falar conosco e pedir sua avaliação de degustação gratuita.</p>
+            </div>
+            
+            <div className="flex flex-col items-center">
+              <div className="w-14 h-14 rounded-full bg-blue-600 text-white font-bold text-xl flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(37,99,235,0.4)]">2</div>
+              <h3 className="text-xl font-bold text-white mb-3">Receba acesso</h3>
+              <p className="text-slate-400">Nosso sistema processa e libera seus dados de login em minutos através do WhatsApp.</p>
+            </div>
+            
+            <div className="flex flex-col items-center">
+              <div className="w-14 h-14 rounded-full bg-blue-600 text-white font-bold text-xl flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(37,99,235,0.4)]">3</div>
+              <h3 className="text-xl font-bold text-white mb-3">Aproveite</h3>
+              <p className="text-slate-400">Configure no dispositivo da sua preferência e pronto! O entretenimento começou.</p>
+            </div>
+          </div>
+          
+          <div className="mt-16">
+            <a 
               href={WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              variants={revealVariants}
-              onClick={() => trackPixelEvent('Contact', { content_name: 'Seção Games Quero Assistir' })}
-              className="inline-flex items-center gap-2 bg-[var(--color-brand-cyan)] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-[#020b16] transition-all duration-300 shadow-[0_0_20px_rgba(67,175,239,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)] hover:scale-105"
+              onClick={handleFreeTrialClick}
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)]"
             >
-              Quero assistir agora
-            </motion.a>
+              Iniciar Teste Agora <ChevronRight className="w-5 h-5" />
+            </a>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Pricing Section */}
-      <section id="planos" className="pt-12 md:pt-16 pb-4 md:pb-8 relative overflow-hidden bg-[#020b16]">
-        {/* Background Overlay removed */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020b16] via-[#020b16]/80 to-[#020b16]"></div>
-        </div>
-
-        {/* Background Effects */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[var(--color-brand-cyan)]/10 rounded-full blur-[120px]"></div>
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[var(--color-brand-cyan)]/5 rounded-full blur-[100px]"></div>
-          {/* Subtle geometric pattern */}
-          <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-        </div>
-
-        <motion.div 
-          variants={containerRevealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-        >
-          <div className="text-center mb-4 md:mb-6">
-            <motion.h2 variants={revealVariants} className="text-3xl md:text-5xl font-black mb-2 tracking-tight text-white">
-              Plano <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">Premium</span>
-            </motion.h2>
-            <motion.p variants={revealVariants} className="text-white text-base md:text-lg max-w-2xl mx-auto font-medium">
-              A melhor experiência em entretenimento com o melhor custo-benefício.
-            </motion.p>
-          </div>
-          <motion.div variants={revealVariants}>
-            <PricingCarousel whatsappLink={WHATSAPP_LINK} />
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Customer Feedback Section */}
-      <section id="feedbacks" className="py-12 md:py-16 bg-[#020b16] border-y border-white/5 relative overflow-hidden">
-        {/* Background Overlay removed */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020b16] via-[#020b16]/70 to-[#020b16]"></div>
-        </div>
-
-        <motion.div 
-          variants={containerRevealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-        >
-          <div className="text-center mb-10">
-            <motion.h2 variants={revealVariants} className="text-3xl md:text-5xl font-black mb-4 text-white uppercase tracking-tight">
-              Veja o que <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)]">nossos clientes</span> estão dizendo
-            </motion.h2>
-            <motion.p variants={revealVariants} className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Feedbacks reais de quem já usa nosso aplicativo todos os dias.
-            </motion.p>
+      <section id="planos" className="py-24 bg-gradient-to-b from-[#060B14] to-[#0A1220]">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Planos simples e transparentes</h2>
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto">Acesso liberado a todo o conteúdo premium sem fidelidade ou surpresas no cartão.</p>
           </div>
 
-          {/* Feedback Card Stack */}
-          <motion.div variants={revealVariants} className="relative h-[560px] w-full max-w-[400px] mx-auto mb-2 perspective-1000">
-            <FeedbackStack items={feedbacks} />
-          </motion.div>
-          
-          {/* Swipe Instruction */}
-          <div className="flex items-center justify-center gap-4 text-white/70 animate-pulse mb-16 relative z-20">
-            <ChevronLeft size={24} className="text-[var(--color-brand-cyan)]" />
-            <span className="text-sm md:text-base font-black uppercase tracking-[0.3em] drop-shadow-[0_0_10px_rgba(67,175,239,0.3)]">
-              Deslize para ver mais
-            </span>
-            <ChevronRight size={24} className="text-[var(--color-brand-cyan)]" />
-          </div>
+          <div className="flex justify-center">
+            {/* Recommended Plan */}
+            <div className="w-full max-w-md relative bg-[#0B1527] rounded-3xl border border-blue-500/40 p-8 md:p-12 shadow-[0_20px_60px_-15px_rgba(37,99,235,0.2)]">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span className="bg-blue-600 text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full whitespace-nowrap shadow-lg">
+                  O Mais Procurado
+                </span>
+              </div>
+              
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-white mb-2">Plano Mensal</h3>
+                <p className="text-slate-400 font-medium">Acesso Completo por 30 Dias</p>
+              </div>
 
-          <div className="mb-12"></div>
-        </motion.div>
+              <div className="flex justify-center items-baseline gap-2 mb-10">
+                <span className="text-2xl font-bold text-blue-400">R$</span>
+                <span className="text-6xl font-extrabold text-white tracking-tighter">29,90</span>
+                <span className="text-slate-400 font-medium">/mês</span>
+              </div>
+
+              <div className="space-y-5 mb-10">
+                {[
+                  "+100.000 Conteúdos",
+                  "Qualidade Ultra HD e 4K",
+                  "Grade Completa de Esportes",
+                  "Canais Adultos (Opcional)",
+                  "Suporte VIP Humanizado",
+                  "Sem Contrato de Fidelidade"
+                ].map((benefit, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    <Check className="w-6 h-6 text-blue-400 shrink-0" />
+                    <span className="text-slate-300 font-medium">{benefit}</span>
+                  </div>
+                ))}
+              </div>
+
+              <a 
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleContactClick('Plano Mensal', 29.90)}
+                className="w-full block text-center py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg transition-all shadow-lg hover:shadow-blue-500/25"
+              >
+                Assinar Agora
+              </a>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* FAQ Section */}
-      <section id="duvidas" className="py-24 bg-[var(--color-brand-navy-dark)] relative overflow-hidden">
-        {/* Background Overlay removed */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-brand-navy-dark)] via-[var(--color-brand-navy-dark)]/80 to-[var(--color-brand-navy-dark)]"></div>
-        </div>
-
-        {/* Background Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-[var(--color-brand-cyan)]/5 blur-[120px] rounded-full pointer-events-none"></div>
-
-        <motion.div 
-          variants={containerRevealVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-        >
+      <section id="faq" className="py-24 bg-[#060B14] border-t border-white/5">
+        <div className="container mx-auto px-6 max-w-3xl">
           <div className="text-center mb-16">
-            <motion.h2 variants={revealVariants} className="text-3xl md:text-5xl font-black text-white mb-4 uppercase tracking-tight">
-              Perguntas <span className="text-[var(--color-brand-cyan)]">Frequentes</span>
-            </motion.h2>
-            <motion.p variants={revealVariants} className="text-gray-400 text-lg">Tire suas dúvidas sobre o melhor serviço de IPTV do Brasil.</motion.p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">Perguntas Frequentes</h2>
+            <p className="text-slate-400">Encontre respostas rápidas para as dúvidas mais comuns dos nossos clientes.</p>
           </div>
 
-          <motion.div variants={revealVariants} className="space-y-4">
+          <div className="mb-12 border-t border-white/10">
             <FAQItem 
-              question="Preciso de internet rápida?" 
-              answer="Recomendamos pelo menos 15 Mega para HD e 30 Mega para 4K. Nossa tecnologia P2P ajuda na estabilidade e evita travamentos mesmo em conexões oscilantes."
+              question="Preciso ter algum aparelho específico?" 
+              answer="Não. Nosso serviço funciona perfeitamente em Smart TVs (Samsung, LG, Roku, Android), Tv Box, Computadores, Celulares (Android e iOS) e Chromecast. Basta ter conexão com a internet."
             />
             <FAQItem 
-              question="Como recebo o acesso?" 
-              answer="Após a confirmação do pagamento, você receberá seus dados de acesso (usuário, senha e URL) e um tutorial passo a passo diretamente no seu WhatsApp em poucos minutos."
+              question="Qual é a velocidade de internet recomendada?" 
+              answer="Para aproveitar nossos canais SD, HD e Full HD recomendamos no mínimo 15 Megas de velocidade. Já para conteúdos em 4K, recomendamos 50 Megas ou mais para garantir estabilidade."
             />
             <FAQItem 
-              question="Posso testar antes de pagar?" 
-              answer="Com certeza! Oferecemos um teste gratuito para você conhecer nossa grade completa de canais, filmes e séries, além de testar a qualidade da nossa transmissão."
+              question="Como recebo meus dados de acesso?" 
+              answer="A liberação é automática! Segundos após a confirmação do pagamento, você receberá o login, senha, link do servidor e tutorial completo diretamente no seu WhatsApp."
             />
             <FAQItem 
-              question="Em quais aparelhos posso assistir?" 
-              answer="Nosso serviço é compatível com Smart TVs (Samsung, LG, Android TV), TV Box, Smartphones (Android/iOS), Computadores, Notebooks, Tablets e Chromecast."
+              question="Tem fidelidade ou multa de cancelamento?" 
+              answer="Garantimos transparência total: não existe contrato de fidelidade nem consultas ao SPC/Serasa. É um sistema pré-pago, você renova apenas o mês que quiser assistir."
             />
-            <FAQItem 
-              question="O serviço tem fidelidade ou contrato?" 
-              answer="Não! Nosso sistema é pré-pago. Você paga pelo período que deseja usar e pode cancelar ou renovar quando quiser, sem multas ou taxas escondidas."
-            />
-          </motion.div>
+          </div>
+        </div>
+      </section>
 
-          <motion.div variants={revealVariants} className="mt-12 text-center">
-            <p className="text-gray-400 mb-6 font-medium">Ainda tem alguma dúvida? Fale com nosso suporte agora mesmo!</p>
+      {/* Final CTA Section */}
+      <section className="py-24 bg-gradient-to-b from-[#0A1220] to-[#060B14] relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div className="container mx-auto px-6 text-center relative z-10">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-8 tracking-tight max-w-3xl mx-auto">
+            Pronto para transformar sua experiência com TV?
+          </h2>
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-12">
+            Junte-se a milhares de clientes que já cortaram o cabo da TV por assinatura tradicional e desfrutam de total liberdade.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a 
               href={WHATSAPP_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => trackPixelEvent('Contact', { content_name: 'FAQ Suporte' })}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-[#25D366] hover:bg-[#20ba5a] text-white font-black rounded-2xl shadow-[0_10px_30px_rgba(37,211,102,0.3)] transition-all active:scale-95 group"
+              onClick={handleFreeTrialClick}
+              className="px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:-translate-y-1"
             >
-              <MessageCircle className="w-6 h-6 fill-white" />
-              FALAR COM SUPORTE NO WHATSAPP
+              Liberar Teste Grátis
             </a>
-          </motion.div>
-        </motion.div>
+            <a 
+              href={WHATSAPP_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackPixelEvent('Contact', { content_name: 'Footer WhatsApp' })}
+              className="px-8 py-4 rounded-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-lg transition-all shadow-[0_0_30px_rgba(37,211,102,0.3)] flex items-center justify-center gap-2 hover:-translate-y-1"
+            >
+              <MessageCircle className="w-5 h-5" /> Via WhatsApp
+            </a>
+          </div>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#000000] pt-12 pb-6 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center text-center gap-8 mb-10">
-            {/* Logo and Brand */}
-            <div className="flex flex-col items-center gap-3">
-              <div className="h-14 w-14 bg-blue-950/40 backdrop-blur-xl rounded-full border-2 border-[var(--color-brand-cyan)]/30 flex items-center justify-center shadow-[0_0_20px_rgba(67,175,239,0.2)]">
-                <span className="text-[var(--color-brand-cyan)] font-black text-xl">L</span>
-              </div>
-              <span className="text-xl font-black text-white tracking-tighter">
-                LEANDRO <span className="text-[var(--color-brand-cyan)]">TV+</span>
-              </span>
-            </div>
-
-            {/* Navigation Links */}
-            <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4">
-              <a href="#inicio" className="text-gray-400 hover:text-[var(--color-brand-cyan)] transition-colors font-bold uppercase tracking-widest text-[10px]">Início</a>
-              <a href="#como-funciona" className="text-gray-400 hover:text-[var(--color-brand-cyan)] transition-colors font-bold uppercase tracking-widest text-[10px]">Como Funciona</a>
-              <a href="#planos" className="text-gray-400 hover:text-[var(--color-brand-cyan)] transition-colors font-bold uppercase tracking-widest text-[10px]">Planos</a>
-              <a href="#depoimentos" className="text-gray-400 hover:text-[var(--color-brand-cyan)] transition-colors font-bold uppercase tracking-widest text-[10px]">Depoimentos</a>
-              <a href="#duvidas" className="text-gray-400 hover:text-[var(--color-brand-cyan)] transition-colors font-bold uppercase tracking-widest text-[10px]">Dúvidas</a>
-            </nav>
+      <footer className="py-10 bg-[#040810] border-t border-white/5 relative z-10">
+        <div className="container mx-auto px-6 text-center text-slate-500 text-sm">
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <Play className="w-5 h-5 text-blue-500 fill-blue-500" />
+            <span className="font-bold text-white text-lg tracking-tight">Leandro TV<span className="text-blue-500">+</span></span>
           </div>
-          
-          <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-            <p className="text-center md:text-left">© 2026 Leandro TV+ - Todos os direitos reservados.</p>
-            <div className="flex gap-6">
-              <a href="#" className="hover:text-white transition-colors">Termos</a>
-              <a href="#" className="hover:text-white transition-colors">Privacidade</a>
-            </div>
-          </div>
+          <p className="mb-2">© {new Date().getFullYear()} Leandro TV+. Todos os direitos reservados.</p>
+          <p className="text-xs opacity-60">Operamos globalmente oferecendo estabilidade, qualidade de imagem e acesso rápido.</p>
         </div>
       </footer>
 
-      {/* Feature Detail Modal */}
-      <AnimatePresence>
-        {isFeatureModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
-            onClick={() => setIsFeatureModalOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="bg-[#080808] border border-white/10 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setIsFeatureModalOpen(false)}
-                className="absolute top-4 right-4 p-3 bg-black/50 hover:bg-black/80 rounded-full text-white/70 hover:text-[var(--color-brand-cyan)] transition-all z-50 backdrop-blur-sm touch-manipulation"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              
-              <div className="relative h-48 w-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center border-b border-white/10">
-                 <div className="p-5 rounded-2xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30 shadow-[0_0_30px_rgba(67,175,239,0.2)]">
-                   <Rocket className="w-12 h-12 text-[var(--color-brand-cyan)]" />
-                 </div>
-              </div>
-
-              <div className="px-8 pb-8 pt-2">
-                <h3 className="text-3xl font-black text-white mb-4 font-display uppercase tracking-wide">IPTV Zero Travamentos</h3>
-                <p className="text-[#e0e0e0] leading-relaxed text-lg font-sans">
-                  Esqueça a tela carregando. Nossa infraestrutura conta com servidores próprios e máquinas dedicadas de alta performance. O resultado? Seu conteúdo roda liso, com estabilidade total, mesmo nos horários de pico.
-                </p>
-                
-                <a
-                  href={WHATSAPP_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-8 w-full block text-center py-4 bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] text-[#020b16] font-bold rounded-xl shadow-[0_0_20px_rgba(67,175,239,0.3)] hover:shadow-[0_0_30px_rgba(67,175,239,0.5)] transition-all transform hover:scale-[1.02]"
-                >
-                  Começar Agora
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Catalog Detail Modal */}
-      <AnimatePresence>
-        {isCatalogModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
-            onClick={() => setIsCatalogModalOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="bg-[#080808] border border-white/10 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setIsCatalogModalOpen(false)}
-                className="absolute top-4 right-4 p-3 bg-black/50 hover:bg-black/80 rounded-full text-white/70 hover:text-[var(--color-brand-cyan)] transition-all z-50 backdrop-blur-sm touch-manipulation"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              
-              <div className="relative h-48 w-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center border-b border-white/10">
-                 <div className="p-5 rounded-2xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30 shadow-[0_0_30px_rgba(67,175,239,0.2)]">
-                   <Film className="w-12 h-12 text-[var(--color-brand-cyan)]" />
-                 </div>
-              </div>
-
-              <div className="px-8 pb-8 pt-2">
-                <h3 className="text-3xl font-black text-white mb-4 font-display uppercase tracking-wide">Lista IPTV Atualizada</h3>
-                <p className="text-[#e0e0e0] leading-relaxed text-lg font-sans">
-                  Atualização diária e automática. Nosso servidor é conectado aos maiores bancos de dados de entretenimento do mundo, garantindo que os lançamentos do cinema e das plataformas cheguem à sua TV em tempo real.
-                </p>
-                
-                <a
-                  href={WHATSAPP_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-8 w-full block text-center py-4 bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] text-[#020b16] font-bold rounded-xl shadow-[0_0_20px_rgba(67,175,239,0.3)] hover:shadow-[0_0_30px_rgba(67,175,239,0.5)] transition-all transform hover:scale-[1.02]"
-                >
-                  Começar Agora
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Multiplatform Detail Modal */}
-      <AnimatePresence>
-        {isMultiplatformModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
-            onClick={() => setIsMultiplatformModalOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="bg-[#080808] border border-white/10 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setIsMultiplatformModalOpen(false)}
-                className="absolute top-4 right-4 p-3 bg-black/50 hover:bg-black/80 rounded-full text-white/70 hover:text-[var(--color-brand-cyan)] transition-all z-50 backdrop-blur-sm touch-manipulation"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              
-              <div className="relative h-48 w-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center border-b border-white/10">
-                 <div className="p-5 rounded-2xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30 shadow-[0_0_30px_rgba(67,175,239,0.2)]">
-                   <MonitorSmartphone className="w-12 h-12 text-[var(--color-brand-cyan)]" />
-                 </div>
-              </div>
-
-              <div className="px-8 pb-8 pt-2">
-                <h3 className="text-3xl font-black text-white mb-4 font-display uppercase tracking-wide">IPTV Multiplataforma</h3>
-                <p className="text-[#e0e0e0] leading-relaxed text-lg font-sans">
-                  Liberdade total. Instalamos em qualquer app de TV, computador ou celular.
-                </p>
-                <p className="text-gray-400 mt-4 text-sm italic border-l-2 border-[var(--color-brand-cyan)] pl-3">
-                  Lembrete: cada aplicativo possui sua própria mensalidade independente.
-                </p>
-                
-                <a
-                  href={WHATSAPP_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-8 w-full block text-center py-4 bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] text-[#020b16] font-bold rounded-xl shadow-[0_0_20px_rgba(67,175,239,0.3)] hover:shadow-[0_0_30px_rgba(67,175,239,0.5)] transition-all transform hover:scale-[1.02]"
-                >
-                  Começar Agora
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Support Detail Modal */}
-      <AnimatePresence>
-        {isSupportModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
-            onClick={() => setIsSupportModalOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="bg-[#080808] border border-white/10 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setIsSupportModalOpen(false)}
-                className="absolute top-4 right-4 p-3 bg-black/50 hover:bg-black/80 rounded-full text-white/70 hover:text-[var(--color-brand-cyan)] transition-all z-50 backdrop-blur-sm touch-manipulation"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              
-              <div className="relative h-48 w-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center border-b border-white/10">
-                 <div className="p-5 rounded-2xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30 shadow-[0_0_30px_rgba(67,175,239,0.2)]">
-                   <Headset className="w-12 h-12 text-[var(--color-brand-cyan)]" />
-                 </div>
-              </div>
-
-              <div className="px-8 pb-8 pt-2">
-                <h3 className="text-3xl font-black text-white mb-4 font-display uppercase tracking-wide">Suporte Premium</h3>
-                <p className="text-[#e0e0e0] leading-relaxed text-lg font-sans">
-                  Atendimento rápido e humano direto pelo WhatsApp. Sem robôs te enrolando. Nossa equipe está pronta para ajudar com qualquer dúvida ou configuração.
-                </p>
-                
-                <a
-                  href={WHATSAPP_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-8 w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] text-[#020b16] font-bold rounded-xl shadow-[0_0_20px_rgba(67,175,239,0.3)] hover:shadow-[0_0_30px_rgba(67,175,239,0.5)] transition-all transform hover:scale-[1.02]"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  Falar com Suporte
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Contract Detail Modal */}
-      <AnimatePresence>
-        {isContractModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
-            onClick={() => setIsContractModalOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="bg-[#080808] border border-white/10 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setIsContractModalOpen(false)}
-                className="absolute top-4 right-4 p-3 bg-black/50 hover:bg-black/80 rounded-full text-white/70 hover:text-[var(--color-brand-cyan)] transition-all z-50 backdrop-blur-sm touch-manipulation"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              
-              <div className="relative h-48 w-full bg-gradient-to-br from-blue-600/20 to-cyan-600/20 flex items-center justify-center border-b border-white/10">
-                 <div className="p-5 rounded-2xl bg-[var(--color-brand-cyan)]/20 backdrop-blur-md border border-[var(--color-brand-cyan)]/30 shadow-[0_0_30px_rgba(67,175,239,0.2)]">
-                   <Unlock className="w-12 h-12 text-[var(--color-brand-cyan)]" />
-                 </div>
-              </div>
-
-              <div className="px-8 pb-8 pt-2">
-                <h3 className="text-3xl font-black text-white mb-4 font-display uppercase tracking-wide">IPTV sem contrato</h3>
-                <p className="text-[#e0e0e0] leading-relaxed text-lg font-sans">
-                  Assinatura IPTV premium sem fidelidade. Pague apenas pelo mês que utilizar.
-                </p>
-                
-                <a
-                  href={WHATSAPP_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-8 w-full block text-center py-4 bg-gradient-to-r from-[var(--color-brand-cyan)] to-[var(--color-brand-cyan-light)] text-[#020b16] font-bold rounded-xl shadow-[0_0_20px_rgba(67,175,239,0.3)] hover:shadow-[0_0_30px_rgba(67,175,239,0.5)] transition-all transform hover:scale-[1.02]"
-                >
-                  Começar Agora
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Floating WhatsApp Button */}
+      {/* Floating WhatsApp Bubble */}
       <a
         href={WHATSAPP_LINK}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => trackPixelEvent('Contact', { content_name: 'Floating WhatsApp' })}
-        className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:bg-[#128C7E] transition-colors flex items-center justify-center animate-pulse-slow group"
+        className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-[0_10px_30px_rgba(37,211,102,0.4)] hover:scale-110 transition-transform flex items-center justify-center flex-col group"
         aria-label="Fale conosco no WhatsApp"
       >
         <svg viewBox="0 0 24 24" className="w-7 h-7 fill-current">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
         </svg>
-        <span className="absolute right-full mr-4 bg-white text-gray-900 px-3 py-1.5 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
-          Fale Conosco
-        </span>
       </a>
     </div>
   );
 }
-
-function FAQItem({ question, answer }: { question: string, answer: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="bg-[#0b1623] border border-white/10 rounded-2xl overflow-hidden transition-all duration-300 hover:border-[var(--color-brand-cyan)]/30 group">
-      <button 
-        className="w-full px-6 py-6 flex justify-between items-center text-left gap-4"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <div className="flex items-center gap-4">
-          <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-[var(--color-brand-cyan)] text-white shadow-[0_0_15px_rgba(67,175,239,0.5)]' : 'bg-white/5 text-gray-400 group-hover:bg-white/10'}`}>
-            <HelpCircle className="w-6 h-6" />
-          </div>
-          <span className={`font-bold text-lg md:text-xl transition-colors duration-300 ${isOpen ? 'text-[var(--color-brand-cyan)]' : 'text-white'}`}>{question}</span>
-        </div>
-        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-[var(--color-brand-cyan)]/20 text-[var(--color-brand-cyan)] rotate-180' : 'bg-white/5 text-gray-500'}`}>
-          <ChevronDown className="w-5 h-5" />
-        </div>
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div 
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-          >
-            <div className="px-6 pb-6 pl-[4.5rem]">
-              <p className="text-gray-400 text-lg leading-relaxed border-l-2 border-[var(--color-brand-cyan)]/20 pl-6 py-2">
-                {answer}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-export default App;
