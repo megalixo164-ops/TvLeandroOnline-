@@ -1,108 +1,592 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="google-site-verification" content="h1-G-GottTerXYGTN8FQme9nnNhYCnql6swAWRWa1dM" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leandro TV+ | IPTV com Qualidade Premium e Máxima Estabilidade</title>
-    <meta name="description" content="Assista TV online, canais ao vivo, filmes e séries em qualquer dispositivo. O melhor serviço de IPTV do Brasil com sistema anti-travamentos. Teste Grátis Agora!" />
-    <meta name="keywords" content="iptv, tv online, tv por assinatura, canais ao vivo, filmes, séries, iptv premium, assistir futebol, smart tv iptv, melhor iptv" />
-    <meta name="robots" content="index, follow" />
-    <meta name="author" content="Leandro TV+" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="UniTv - Filmes, séries e esportes em um só lugar. Assine já e tenha a melhor experiência de entretenimento no seu Android.">
+    <title>UniTv - Seu entretenimento em um só lugar</title>
     
-    <link rel="canonical" href="https://tvleandroonline.vercel.app" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Leandro TV+" />
-    <meta property="og:url" content="https://tvleandroonline.vercel.app" />
-    <meta property="og:title" content="Leandro TV+ | IPTV com Qualidade Premium e Máxima Estabilidade" />
-    <meta property="og:description" content="Assista TV online, canais ao vivo, filmes e séries em qualquer dispositivo. Sem fidelidade e sem travamentos. Teste Grátis!" />
-    <meta property="og:image" content="https://tvleandroonline.vercel.app/favicon.svg" />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://tvleandroonline.vercel.app" />
-    <meta property="twitter:title" content="Leandro TV+ | IPTV Premium" />
-    <meta property="twitter:description" content="O melhor serviço de IPTV do Brasil. Canais, Filmes e Séries na sua Smart TV, Celular ou Computador." />
-    <meta property="twitter:image" content="https://tvleandroonline.vercel.app/favicon.svg" />
-
-    <!-- Schema.org WebSite -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Leandro TV+",
-      "url": "https://tvleandroonline.vercel.app",
-      "description": "O melhor serviço de IPTV Premium do Brasil."
-    }
-    </script>
+    <!-- Preload critical images -->
+    <link rel="preload" as="image" href="https://i.imgur.com/5lsNyZb.png">
+    <link rel="preload" as="image" href="https://i.imgur.com/PWMbV2H.png">
     
-    <!-- Schema.org Organization -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Leandro TV+",
-      "url": "https://tvleandroonline.vercel.app",
-      "logo": "https://tvleandroonline.vercel.app/favicon.svg",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+55-47-99273-3349",
-        "contactType": "customer support"
-      }
-    }
-    </script>
-    
-    <!-- Schema.org FAQPage -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Preciso ter algum aparelho específico?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Não. Nosso serviço funciona perfeitamente em Smart TVs (Samsung, LG, Roku, Android), Tv Box, Computadores, Celulares (Android e iOS) e Chromecast. Basta ter conexão com a internet."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Tem fidelidade ou multa de cancelamento?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Garantimos transparência total: não existe contrato de fidelidade nem consultas ao SPC/Serasa. É um sistema pré-pago, você renova apenas o mês que quiser assistir."
-          }
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #E53935;
+            --whatsapp-green: #25D366;
+            --whatsapp-hover: #1EBE55;
+            --text-dark: #1d1d1f;
+            --text-gray: #86868b;
+            --bg-white: #ffffff;
         }
-      ]
-    }
-    </script>
 
-    <!-- Meta Pixel Code -->
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, h4, .logo, .btn-whatsapp, .promo-badge, .price-new {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-white);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Subtle Geometric Background */
+        .bg-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: #ffffff;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(229,57,53,0.04) 0%, rgba(229,57,53,0) 70%);
+        }
+
+        .shape-1 {
+            width: 800px;
+            height: 800px;
+            top: -300px;
+            left: -200px;
+        }
+
+        .shape-2 {
+            width: 600px;
+            height: 600px;
+            bottom: -100px;
+            right: -150px;
+        }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Brand Container */
+        .brand-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .brand-name {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #111111;
+            letter-spacing: -0.5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .verified-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: clamp(2rem, 8vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+            max-width: 900px;
+            color: var(--text-dark);
+        }
+
+        p.subtitle {
+            font-size: clamp(1rem, 4vw, 1.25rem);
+            font-weight: 500;
+            line-height: 1.6;
+            color: var(--text-gray);
+            margin-bottom: 3.5rem;
+            max-width: 700px;
+        }
+
+        p.subtitle strong {
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            color: var(--primary-red);
+        }
+
+        /* Image Placeholder / Main Image */
+        .hero-image {
+            width: 100%;
+            max-width: 900px;
+            height: auto;
+            border-radius: 24px;
+            margin-bottom: 3.5rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.04);
+            object-fit: cover;
+        }
+
+        /* Promo Container and Grid */
+        .promo-container {
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 2.5rem;
+        }
+
+        .promo-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .promo-header h2 {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+        
+        .promo-badge {
+            display: inline-block;
+            background-color: var(--primary-red);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 15px rgba(229, 57, 53, 0.3);
+            margin-bottom: 1.5rem;
+        }
+
+        .promo-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 600px) {
+            .promo-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .promo-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .promo-card {
+            background-color: var(--bg-white);
+            border: 2px solid rgba(229, 57, 53, 0.2);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .promo-card:hover {
+            border-color: var(--primary-red);
+            box-shadow: 0 15px 40px rgba(229, 57, 53, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .promo-card.highlight {
+            border-color: var(--primary-red);
+            box-shadow: 0 15px 40px rgba(229, 57, 53, 0.15);
+            transform: scale(1.05);
+            z-index: 2;
+        }
+
+        .promo-card.highlight:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .promo-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+        
+        .promo-card .telas-info {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            background-color: #f5f5f7;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+        }
+
+        .promo-prices {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+            margin-bottom: 0;
+        }
+
+        .price-old {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            text-decoration: line-through;
+            font-weight: 500;
+        }
+
+        .price-new {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-red);
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+
+        .promo-timer {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            background-color: rgba(229, 57, 53, 0.05);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        #countdown {
+            color: var(--primary-red);
+            font-weight: 800;
+            font-size: 1.3rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* WhatsApp Button */
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--whatsapp-green);
+            color: white;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 700;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.35);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: pulse 2s infinite;
+            margin-bottom: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: var(--whatsapp-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(37, 211, 102, 0.45);
+        }
+
+        /* Product Description */
+        .product-description {
+            max-width: 800px;
+            margin: 0 auto 3.5rem auto;
+            text-align: left;
+            background: #fcfcfd;
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .product-description h2 {
+            font-size: clamp(1.8rem, 3.5vw, 2.2rem);
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .product-description p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-gray);
+            margin-bottom: 2.5rem;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .product-description ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .product-description li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 2.5rem 1.25rem;
+            }
+            .product-description {
+                padding: 2rem 1.5rem;
+                margin-bottom: 2.5rem;
+            }
+            .product-description h2 {
+                font-size: 1.5rem;
+            }
+            .product-description li {
+                font-size: 1rem;
+            }
+            .promo-card.highlight {
+                transform: none;
+            }
+            .promo-card.highlight:hover {
+                transform: translateY(-5px);
+            }
+            .btn-whatsapp {
+                padding: 1rem 2rem;
+                font-size: 1.15rem;
+            }
+            .hero-image {
+                border-radius: 16px;
+                margin-bottom: 2.5rem;
+            }
+            .brand-container {
+                margin-bottom: 1.5rem;
+            }
+            .logo {
+                max-width: 160px;
+            }
+            h1 {
+                letter-spacing: -1px;
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Footer */
+        footer {
+            padding: 2.5rem;
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            margin-top: auto;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+            70% { box-shadow: 0 0 0 25px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Animation classes */
+        .fade-in-element {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <main>
+        <div class="brand-container fade-in-element">
+            <img src="https://i.imgur.com/5lsNyZb.png" alt="UniTv Logo" class="logo" width="200" height="60" fetchpriority="high">
+            <div class="brand-name">
+                UniTv
+                <svg class="verified-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.5213 2.62368C11.3147 1.75255 12.6853 1.75255 13.4787 2.62368L14.4989 3.74391C14.8998 4.18418 15.4761 4.42288 16.071 4.39508L17.5845 4.32435C18.7614 4.26934 19.7307 5.23857 19.6757 6.41554L19.6049 7.92905C19.5771 8.52388 19.8158 9.10016 20.2561 9.50111L21.3763 10.5213C22.2475 11.3147 22.2475 12.6853 21.3763 13.4787L20.2561 14.4989C19.8158 14.8998 19.5771 15.4761 19.6049 16.071L19.6757 17.5845C19.7307 18.7614 18.7614 19.7307 17.5845 19.6757L16.071 19.6049C15.4761 19.5771 14.8998 19.8158 14.4989 20.2561L13.4787 21.3763C12.6853 22.2475 11.3147 22.2475 10.5213 21.3763L9.50111 20.2561C9.10016 19.8158 8.52388 19.5771 7.92905 19.6049L6.41554 19.6757C5.23857 19.7307 4.26934 18.7614 4.32435 17.5845L4.39508 16.071C4.42288 15.4761 4.18418 14.8998 3.74391 14.4989L2.62368 13.4787C1.75255 12.6853 1.75255 11.3147 2.62368 10.5213L3.74391 9.50111C4.18418 9.10016 4.42288 8.52388 4.39508 7.92905L4.32435 6.41554C4.26934 5.23857 5.23857 4.26934 6.41554 4.32435L7.92905 4.39508C8.52388 4.42288 9.10016 4.18418 9.50111 3.74391L10.5213 2.62368Z" fill="#1D9BF0"/>
+                    <path d="M10.3333 14.5L7.5 11.6667L8.44167 10.725L10.3333 12.6083L15.0583 7.88333L16 8.83333L10.3333 14.5Z" fill="white"/>
+                </svg>
+            </div>
+        </div>
+        
+        <h1 class="fade-in-element">Seu entretenimento em um só lugar.</h1>
+        <p class="subtitle fade-in-element">Filmes, séries, esportes e muito mais.<br><strong>Compatível apenas com sistema Android.</strong></p>
+        
+        <img src="https://i.imgur.com/PWMbV2H.png" alt="Smart TV com Celular" class="hero-image fade-in-element" width="900" height="500" fetchpriority="high">
+
+        <div class="product-description fade-in-element">
+            <h2>Tudo o que você gosta de assistir em um só lugar!</h2>
+            <p>Descubra uma plataforma moderna, rápida e fácil de usar, desenvolvida para oferecer uma experiência completa de entretenimento. Interface intuitiva, excelente qualidade de imagem e compatibilidade com diversos dispositivos.</p>
+            <ul>
+                <li>✅ Fácil de usar</li>
+                <li>✅ Compatível com TVs Android, celulares Android e TV box</li>
+                <li>✅ Navegação rápida e organizada</li>
+                <li>✅ Suporte dedicado para ajudar quando precisar</li>
+            </ul>
+        </div>
+
+        <a href="https://wa.me/5547992733349?text=Ol%C3%A1%2C%20gostaria%20de%20testar%20o%20app%20da%20UniTv!" target="_blank" rel="noopener noreferrer" class="btn-whatsapp fade-in-element" style="margin-bottom: 3.5rem;">
+            Quero assinar
+        </a>
+
+        <div class="promo-container fade-in-element">
+            <div class="promo-header">
+                <div class="promo-badge">Oferta Relâmpago</div>
+                <h2>Escolha seu Plano</h2>
+                <div class="promo-timer">
+                    A oferta expira em: <span id="countdown">10:00</span>
+                </div>
+            </div>
+            
+            <div class="promo-grid">
+                <!-- 1 Mês -->
+                <div class="promo-card">
+                    <h3>1 Mês</h3>
+                    <div class="telas-info">2 Telas Inclusas</div>
+                    <div class="promo-prices">
+                        <span class="price-old">De R$ 49,90</span>
+                        <span class="price-new">R$ 34,90</span>
+                    </div>
+                </div>
+                
+                <!-- 3 Meses -->
+                <div class="promo-card">
+                    <h3>3 Meses</h3>
+                    <div class="telas-info">2 Telas Inclusas</div>
+                    <div class="promo-prices">
+                        <span class="price-old">De R$ 104,90</span>
+                        <span class="price-new">R$ 89,90</span>
+                    </div>
+                </div>
+
+                <!-- 6 Meses -->
+                <div class="promo-card">
+                    <h3>6 Meses</h3>
+                    <div class="telas-info">2 Telas Inclusas</div>
+                    <div class="promo-prices">
+                        <span class="price-old">De R$ 209,90</span>
+                        <span class="price-new">R$ 179,90</span>
+                    </div>
+                </div>
+
+                <!-- 1 Ano -->
+                <div class="promo-card highlight">
+                    <h3>1 Ano</h3>
+                    <div class="telas-info">2 Telas Inclusas</div>
+                    <div class="promo-prices">
+                        <span class="price-old">De R$ 419,90</span>
+                        <span class="price-new">R$ 379,00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a href="https://wa.me/5547992733349?text=Ol%C3%A1%2C%20gostaria%20de%20testar%20o%20app%20da%20UniTv!" target="_blank" rel="noopener noreferrer" class="btn-whatsapp fade-in-element">
+            Quero assinar
+        </a>
+
+
+    </main>
+
+    <footer>
+        <p style="max-width: 800px; margin: 0 auto 1rem auto; font-size: 0.85rem; line-height: 1.5; color: var(--text-gray);">
+            Somos revendedores oficiais da UniTV no Brasil, autorizados a comercializar licenças originais da plataforma. Trabalhamos exclusivamente com produtos originais, oferecendo ativação rápida, suporte especializado e atendimento de qualidade para garantir a melhor experiência aos nossos clientes.
+        </p>
+        <p>&copy; 2026 Todos os direitos reservados.</p>
+    </footer>
+
     <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '949846511038402');
-    fbq('track', 'PageView');
-    fbq('track', 'ViewContent');
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.fade-in-element');
+            
+            elements.forEach((el, index) => {
+                // Staggered animation
+                el.style.animation = `fadeIn 1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards ${index * 0.15 + 0.2}s`;
+            });
+
+            // Countdown Timer
+            function startTimer(duration, display) {
+                let timer = duration, minutes, seconds;
+                const interval = setInterval(function () {
+                    minutes = parseInt(timer / 60, 10);
+                    seconds = parseInt(timer % 60, 10);
+
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                    display.textContent = minutes + ":" + seconds;
+
+                    if (--timer < 0) {
+                        clearInterval(interval);
+                        display.textContent = "00:00";
+                    }
+                }, 1000);
+            }
+
+            const tenMinutes = 60 * 10;
+            const display = document.querySelector('#countdown');
+            if(display) {
+                startTimer(tenMinutes, display);
+            }
+        });
     </script>
-    <!-- End Meta Pixel Code -->
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=949846511038402&ev=PageView&noscript=1"
-    /></noscript>
-  </body>
+</body>
 </html>
